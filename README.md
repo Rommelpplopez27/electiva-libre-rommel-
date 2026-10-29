@@ -1,54 +1,42 @@
-# KineFlash - Guía Anatómica y Biomecánica Rápida ⚡
+# KineFlash PRO - Guía Anatómica y Biomecánica Rápida ⚡
 
-Aplicación web diseñada específicamente para **estudiantes de Fisioterapia de segundo semestre en adelante**. Resuelve al instante dudas sobre movimientos articulares, músculos participantes, puntos de origen anatómico y planos biomecánicos.
-
----
-
-## 🎯 Funcionalidades Principales (PRD)
-
-1. **Buscador ágil de movimientos:**
-   - Permite escribir o buscar movimientos comunes (ej. *"flexionar el codo"*, *"levantar el brazo"*, *"extensión de rodilla"*).
-   - Filtros instantáneos por articulación / región (*Hombro, Codo, Muñeca, Rodilla, Cadera, Tobillo*) y por planos anatómicos (*Sagital, Frontal, Transversal*).
-
-2. **Músculos participantes identificados:**
-   - Clasificación clara entre **Agonistas Principales** y **Sinergistas / Estabilizadores**.
-
-3. **Ficha muscular instantánea:**
-   - Al tocar cualquier músculo, se despliega una ficha con:
-     - **Punto de origen anatómico exacto.**
-     - **Función y acción biomecánica.**
-     - **Inserción e Inervación con raíces nerviosas.**
-     - Perla clínica para parciales y prácticas universitarias.
-
-4. **Indicador de plano y eje anatómico:**
-   - Muestra claramente si el movimiento ocurre en el plano **Sagital**, **Frontal** o **Transversal**, junto a su eje de movimiento y tipo de palanca biomecánica.
-
-5. **Modo Repaso Flashcards:**
-   - Tarjetas 3D para autoevaluación rápida antes de parciales o laboratorios prácticos.
-
-6. **Sin registro ni formularios:**
-   - Acceso inmediato desde el navegador web de cualquier teléfono móvil o computadora.
+Aplicación web diseñada específicamente para **estudiantes de Fisioterapia de segundo semestre en adelante**. Resuelve al instante dudas sobre movimientos articulares, músculos participantes, puntos de origen anatómico, inserciones óseas y planos biomecánicos con **animaciones y videos en bucle**.
 
 ---
 
-## 📚 Los 10 Movimientos Base Verificados
+## 🚀 Despliegue en GitHub Pages (Enlace Público)
 
-1. **Flexión de Codo:** Plano Sagital | Braquial anterior, Bíceps braquial, Braquiorradial.
-2. **Extensión de Codo:** Plano Sagital | Tríceps braquial, Ancóneo.
-3. **Abducción de Hombro:** Plano Frontal | Deltoides medio, Supraespinoso.
-4. **Flexión de Hombro:** Plano Sagital | Deltoides anterior, Coracobraquial, Pectoral mayor (clavicular).
-5. **Extensión de Rodilla:** Plano Sagital | Cuádriceps (Recto femoral, Vasto medial, Vasto lateral).
-6. **Flexión de Rodilla:** Plano Sagital | Isquiotibiales (Bíceps femoral, Semitendinoso, Semimembranoso).
-7. **Flexión de Cadera:** Plano Sagital | Psoas-Ilíaco (Psoas mayor, Ilíaco), Recto femoral.
-8. **Abducción de Cadera:** Plano Frontal | Glúteo medio, Glúteo menor, Tensor de la fascia lata.
-9. **Dorsiflexión de Tobillo:** Plano Sagital | Tibial anterior, Extensor largo de los dedos.
-10. **Flexión Plantar de Tobillo:** Plano Sagital | Tríceps sural (Gastrocnemios, Sóleo).
+👉 **[https://rommelpplopez27.github.io/electiva-libre-rommel-/](https://rommelpplopez27.github.io/electiva-libre-rommel-/)**
 
 ---
 
-## 🚀 Despliegue en GitHub Pages
+## 🎯 Funcionalidades Principales (PRD + Actualizaciones Clínicas)
 
-Para acceder a la versión pública en línea desde el celular:
-👉 **`https://rommelpplopez27.github.io/electiva-libre-rommel-/`**
+1. **Revisión Anatómica Completa y Exhaustiva:**
+   - Información clínica detallada de **origen anatómico exacto** e **inserción ósea** para todos los músculos de la aplicación.
+   - Detalle pormenorizado del **músculo deltoides con sus tres cabezas**:
+     - *Porción clavicular (anterior)*
+     - *Porción acromial (media)*
+     - *Porción espinal (posterior)*
+   - Cuádriceps desglosado con sus 4 cabezas (*Recto femoral, Vasto medial/VMO, Vasto lateral y Vasto intermedio*).
+   - Inervación con niveles radiculares específicos (*ej. C5-C6, L2-L4, S1-S2*).
+
+2. **Soporte de Video/GIFs y Cinemática en Bucle (60 FPS):**
+   - Cada movimiento y ficha muscular cuenta con un **reproductor biomecánico dinámico**.
+   - Muestra el hueso fijo, el eje articular, la palanca ósea en movimiento y el vientre muscular en contracción activa y resaltado luminoso.
+   - Selector interactivo entre **Loop 60fps** y **Video / GIF Clínico**.
+   - Controles de reproducción con **Pausa** y **Cámara Lenta (0.5x)** para estudiar el reclutamiento muscular en detalle.
+
+3. **Buscador ágil en tiempo real:**
+   - Búsqueda por término cotidiano o técnico (*"deltoides", "codo", "isquiotibiales", "doblar brazo"*).
+   - Filtros instantáneos por región anatómica (*Historias de Instagram*) y por planos (*Sagital, Frontal, Transversal*).
+
+4. **Ficha Muscular Instantánea al tacto:**
+   - Al tocar cualquier músculo, se despliega una ficha con Origen, Inserción, Función, Inervación y Perla Clínica de examen.
+
+5. **Modo Repaso Flashcards 3D:**
+   - Tarjetas interactivas para auto-evaluación rápida antes de parciales o laboratorios prácticos.
+
+---
 
 Desarrollado para la materia de Electiva Libre por Rommel López.

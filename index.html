@@ -74,6 +74,116 @@
       background-color: rgba(0, 0, 0, 0.82);
       backdrop-filter: blur(6px);
     }
+
+    /* =========================================================================
+       ANIMACIONES BIOMECÁNICAS VECTORIALES EN BUCLE (SVG MOTION LOOPS)
+       ========================================================================= */
+    @keyframes anim-elbow-flexion {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-100deg); }
+    }
+    @keyframes anim-elbow-extension {
+      0%, 100% { transform: rotate(-95deg); }
+      50% { transform: rotate(0deg); }
+    }
+    @keyframes anim-shoulder-abduction {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-85deg); }
+    }
+    @keyframes anim-shoulder-flexion {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-90deg); }
+    }
+    @keyframes anim-knee-extension {
+      0%, 100% { transform: rotate(-90deg); }
+      50% { transform: rotate(0deg); }
+    }
+    @keyframes anim-knee-flexion {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(95deg); }
+    }
+    @keyframes anim-hip-flexion {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-80deg); }
+    }
+    @keyframes anim-hip-abduction {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-35deg); }
+    }
+    @keyframes anim-ankle-dorsiflexion {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-25deg); }
+    }
+    @keyframes anim-ankle-plantarflexion {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(40deg); }
+    }
+
+    /* Pulso de vientre muscular y puntos de origen */
+    @keyframes muscle-pump {
+      0%, 100% { opacity: 0.55; stroke-width: 6; }
+      50% { opacity: 1; stroke-width: 11; filter: drop-shadow(0 0 8px #00f2fe); }
+    }
+    @keyframes pulse-pin {
+      0%, 100% { r: 3.5; opacity: 0.8; }
+      50% { r: 5.5; opacity: 1; }
+    }
+
+    .motion-loop-elbow-flexion {
+      animation: anim-elbow-flexion 2.6s ease-in-out infinite;
+      transform-origin: 160px 105px;
+    }
+    .motion-loop-elbow-extension {
+      animation: anim-elbow-extension 2.6s ease-in-out infinite;
+      transform-origin: 160px 105px;
+    }
+    .motion-loop-shoulder-abduction {
+      animation: anim-shoulder-abduction 3s ease-in-out infinite;
+      transform-origin: 160px 75px;
+    }
+    .motion-loop-shoulder-flexion {
+      animation: anim-shoulder-flexion 2.8s ease-in-out infinite;
+      transform-origin: 155px 75px;
+    }
+    .motion-loop-knee-extension {
+      animation: anim-knee-extension 2.8s ease-in-out infinite;
+      transform-origin: 160px 95px;
+    }
+    .motion-loop-knee-flexion {
+      animation: anim-knee-flexion 2.8s ease-in-out infinite;
+      transform-origin: 160px 95px;
+    }
+    .motion-loop-hip-flexion {
+      animation: anim-hip-flexion 3s ease-in-out infinite;
+      transform-origin: 160px 65px;
+    }
+    .motion-loop-hip-abduction {
+      animation: anim-hip-abduction 3s ease-in-out infinite;
+      transform-origin: 160px 65px;
+    }
+    .motion-loop-ankle-dorsiflexion {
+      animation: anim-ankle-dorsiflexion 2.4s ease-in-out infinite;
+      transform-origin: 160px 125px;
+    }
+    .motion-loop-ankle-plantarflexion {
+      animation: anim-ankle-plantarflexion 2.4s ease-in-out infinite;
+      transform-origin: 160px 125px;
+    }
+
+    .muscle-contract {
+      animation: muscle-pump 2.6s ease-in-out infinite;
+    }
+    .origin-indicator {
+      animation: pulse-pin 1.6s ease-in-out infinite;
+    }
+
+    /* Pausa interactiva */
+    .animation-paused * {
+      animation-play-state: paused !important;
+    }
+    .animation-slowmo * {
+      animation-duration: 5.2s !important;
+    }
   </style>
 </head>
 <body class="bg-black text-white antialiased min-h-screen flex flex-col items-center font-sans selection:bg-neutral-800 selection:text-white">
@@ -86,12 +196,13 @@
       <div class="flex items-center gap-2">
         <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
           KineFlash
-          <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-gradient-to-r from-accent to-accent-teal text-black tracking-wider uppercase">FT</span>
+          <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-gradient-to-r from-accent to-accent-teal text-black tracking-wider uppercase">FT PRO</span>
         </span>
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-surface-card border border-ig-border text-neutral-400">
-          Semestre 2+
+        <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-surface-card border border-ig-border text-accent flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          Modo Biomecánico
         </span>
       </div>
     </header>
@@ -122,7 +233,7 @@
             <input 
               id="searchInput"
               class="w-full pl-10 pr-10 py-2.5 bg-[#121212] text-white text-sm rounded-xl border border-ig-border focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-ig-subtext" 
-              placeholder="Buscar (ej. codo, levantar brazo, psoas)..." 
+              placeholder="Buscar (ej. deltoides, codo, rodilla, psoas)..." 
               type="text"
             />
             <button id="clearSearchBtn" class="hidden absolute right-3 p-1 text-neutral-400 hover:text-white" title="Limpiar búsqueda">
@@ -142,10 +253,10 @@
         <div class="flex items-center justify-between pt-1">
           <div>
             <h2 class="text-sm font-bold text-white tracking-tight flex items-center gap-1.5">
-              <span>Movimientos Anatómicos</span>
+              <span>Movimientos con Cinemática Activa</span>
               <span class="material-symbols-outlined text-accent text-sm fill-icon">verified</span>
             </h2>
-            <p class="text-[11px] text-ig-muted">Toca un músculo para ver su origen y función</p>
+            <p class="text-[11px] text-ig-muted">Toca un músculo para ver origen, inserción y cinemática</p>
           </div>
           <span id="movementCountIndicator" class="text-[10px] font-mono text-ig-muted bg-surface-card px-2.5 py-1 rounded-full border border-ig-border">
             10 movimientos
@@ -195,30 +306,30 @@
       <div class="p-4 bg-[#121212] border border-[#262626] rounded-2xl">
         <h2 class="text-base font-bold text-white flex items-center gap-2 mb-2">
           <span class="material-symbols-outlined text-accent">medical_services</span>
-          KineFlash - Guía Anatómica
+          KineFlash PRO - Guía Anatómica
         </h2>
         <p class="text-xs text-neutral-300 leading-relaxed mb-3">
-          Herramienta de consulta rápida diseñada específicamente para estudiantes de Fisioterapia de segundo semestre en adelante.
+          Herramienta de consulta rápida y cinemática diseñada específicamente para estudiantes de Fisioterapia de segundo semestre en adelante.
         </p>
         <div class="space-y-2 text-xs">
           <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
-            <strong class="text-accent block mb-0.5">🎯 Objetivo:</strong>
-            Resolver al instante dudas sobre músculos participantes, puntos de origen anatómico y planos de movimiento.
+            <strong class="text-accent block mb-0.5">🎯 Músculos y Movimientos Verificados:</strong>
+            Revisión anatómica detallada de origen e inserción ósea, inervación radicular y acciones musculares (incluyendo las 3 porciones del Deltoides y el Cuádriceps completo).
           </div>
           <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
-            <strong class="text-emerald-400 block mb-0.5">⚡ Sin registro:</strong>
-            Acceso directo e inmediato, pensado para consultas ágiles en laboratorios y clínicas.
+            <strong class="text-emerald-400 block mb-0.5">🎬 Soporte de Animación y Loops Biomecánicos:</strong>
+            Simulación interactiva a 60fps con músculo en contracción resaltado y control de velocidad en cámara lenta (0.5x).
           </div>
           <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
-            <strong class="text-amber-400 block mb-0.5">⚠️ Alcance del proyecto:</strong>
-            Guía de estudio anatómico y biomecánico. No emite diagnósticos ni reemplaza el criterio médico o libros de texto.
+            <strong class="text-amber-400 block mb-0.5">⚡ Sin registro ni barreras:</strong>
+            100% inmediato para consultas ágiles en laboratorios anatómicos y rotaciones clínicas.
           </div>
         </div>
       </div>
 
       <div class="p-4 bg-[#121212] border border-[#262626] rounded-2xl text-center">
-        <span class="text-[11px] font-mono text-neutral-500 block mb-1">Electiva Libre • Rommel</span>
-        <span class="text-xs text-neutral-400">Versión 1.0 Web & Mobile (Octubre 2026)</span>
+        <span class="text-[11px] font-mono text-neutral-500 block mb-1">Electiva Libre • Rommel López</span>
+        <span class="text-xs text-neutral-400">Versión 1.2 Pro • Cinemática y Loops (Octubre 2026)</span>
       </div>
     </div>
 
