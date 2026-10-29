@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="h-full bg-black" lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+  <title>KineFlash - Guía Anatómica y Biomecánica Rápida</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#000000",
+            surface: "#121212",
+            "surface-card": "#18181b",
+            "surface-elevated": "#222226",
+            "ig-border": "#262626",
+            "ig-border-subtle": "#1e1e1e",
+            "ig-muted": "#a8a8a8",
+            "ig-subtext": "#737373",
+            accent: "#00f2fe",
+            "accent-teal": "#00dce6",
+            "accent-purple": "#833ab4",
+            "accent-pink": "#fd1d1d",
+            "accent-orange": "#fcb045"
+          },
+          fontFamily: {
+            sans: ["'Plus Jakarta Sans'", "sans-serif"],
+            mono: ["'JetBrains Mono'", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Gradient borders estilo historias de Instagram */
+    .story-ring-active {
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+    .story-ring-cyan {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    }
+    body {
+      min-height: max(884px, 100dvh);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(6px);
+    }
+  </style>
+</head>
+<body class="bg-black text-white antialiased min-h-screen flex flex-col items-center font-sans selection:bg-neutral-800 selection:text-white">
+
+  <!-- Mobile Shell Wrapper (Constrained to max-w-md on desktop, full width on mobile) -->
+  <div class="w-full max-w-md min-h-screen bg-black relative flex flex-col pb-24 border-x border-ig-border-subtle shadow-2xl">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 left-0 w-full z-40 flex justify-between items-center px-4 h-14 bg-black/90 backdrop-blur-md border-b border-ig-border">
+      <div class="flex items-center gap-2">
+        <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1.5">
+          KineFlash
+          <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-gradient-to-r from-accent to-accent-teal text-black tracking-wider uppercase">FT</span>
+        </span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-surface-card border border-ig-border text-neutral-400">
+          Semestre 2+
+        </span>
+      </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: EXPLORADOR DE MOVIMIENTOS (MAIN)  -->
+    <!-- ========================================== -->
+    <div id="explorerView" class="w-full flex-1 flex flex-col">
+
+      <!-- Historias de Articulaciones (Instagram-style Carousel) -->
+      <section class="w-full pt-3 pb-2.5 border-b border-ig-border bg-[#0a0a0a]">
+        <div class="px-4 mb-1.5 flex items-center justify-between">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">Articulación / Región</span>
+          <span class="text-[10px] text-accent font-mono cursor-pointer hover:underline" onclick="selectRegion('all')">Ver todas</span>
+        </div>
+        <div id="storiesContainer" class="flex items-center gap-3.5 px-4 overflow-x-auto no-scrollbar">
+          <!-- Dynamic Stories Loaded by JS -->
+        </div>
+      </section>
+
+      <!-- Main Feed & Search Area -->
+      <main class="w-full px-4 pt-3.5 flex-1 flex flex-col gap-3.5">
+        
+        <!-- Search Input Bar -->
+        <section class="w-full">
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3.5 text-ig-muted text-lg pointer-events-none">search</span>
+            <input 
+              id="searchInput"
+              class="w-full pl-10 pr-10 py-2.5 bg-[#121212] text-white text-sm rounded-xl border border-ig-border focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-ig-subtext" 
+              placeholder="Buscar (ej. codo, levantar brazo, psoas)..." 
+              type="text"
+            />
+            <button id="clearSearchBtn" class="hidden absolute right-3 p-1 text-neutral-400 hover:text-white" title="Limpiar búsqueda">
+              <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Filtros de Planos Anatómicos (Sagital, Frontal, Transversal) -->
+        <section class="w-full">
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="planeFiltersContainer">
+            <!-- Dynamic Plane Buttons Loaded by JS -->
+          </div>
+        </section>
+
+        <!-- Context & Count Header -->
+        <div class="flex items-center justify-between pt-1">
+          <div>
+            <h2 class="text-sm font-bold text-white tracking-tight flex items-center gap-1.5">
+              <span>Movimientos Anatómicos</span>
+              <span class="material-symbols-outlined text-accent text-sm fill-icon">verified</span>
+            </h2>
+            <p class="text-[11px] text-ig-muted">Toca un músculo para ver su origen y función</p>
+          </div>
+          <span id="movementCountIndicator" class="text-[10px] font-mono text-ig-muted bg-surface-card px-2.5 py-1 rounded-full border border-ig-border">
+            10 movimientos
+          </span>
+        </div>
+
+        <!-- Feed of Movement Cards -->
+        <section id="feedContainer" class="flex flex-col gap-3.5 pb-4">
+          <!-- Dynamic Cards Loaded by JS -->
+        </section>
+      </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: MODO REPASO FLASHCARDS            -->
+    <!-- ========================================== -->
+    <div id="flashcardView" class="hidden w-full flex-1 flex flex-col px-4 pt-4 pb-4">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-accent">style</span>
+            Modo Repaso Rápido
+          </h2>
+          <p class="text-xs text-neutral-400">Ponte a prueba antes de tu parcial o práctica</p>
+        </div>
+        <div class="flex items-center gap-1 bg-[#18181b] px-2.5 py-1 rounded-full border border-[#262626]">
+          <span class="material-symbols-outlined text-xs text-amber-400 fill-icon">local_fire_department</span>
+          <span id="streakIndicator" class="text-[11px] font-mono font-bold text-white">0 racha</span>
+        </div>
+      </div>
+
+      <div class="text-[11px] font-mono text-neutral-400 mb-2 flex justify-between">
+        <span id="flashcardProgress">Tarjeta 1 de 10</span>
+        <span class="text-accent">Auto-evaluación</span>
+      </div>
+
+      <!-- Container of the active Flashcard -->
+      <div id="studyFlashcard" class="w-full flex-1 flex flex-col justify-center">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: INFORMACIÓN Y PRD                 -->
+    <!-- ========================================== -->
+    <div id="infoView" class="hidden w-full flex-1 flex flex-col px-4 pt-4 pb-6 space-y-4">
+      <div class="p-4 bg-[#121212] border border-[#262626] rounded-2xl">
+        <h2 class="text-base font-bold text-white flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-accent">medical_services</span>
+          KineFlash - Guía Anatómica
+        </h2>
+        <p class="text-xs text-neutral-300 leading-relaxed mb-3">
+          Herramienta de consulta rápida diseñada específicamente para estudiantes de Fisioterapia de segundo semestre en adelante.
+        </p>
+        <div class="space-y-2 text-xs">
+          <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
+            <strong class="text-accent block mb-0.5">🎯 Objetivo:</strong>
+            Resolver al instante dudas sobre músculos participantes, puntos de origen anatómico y planos de movimiento.
+          </div>
+          <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
+            <strong class="text-emerald-400 block mb-0.5">⚡ Sin registro:</strong>
+            Acceso directo e inmediato, pensado para consultas ágiles en laboratorios y clínicas.
+          </div>
+          <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
+            <strong class="text-amber-400 block mb-0.5">⚠️ Alcance del proyecto:</strong>
+            Guía de estudio anatómico y biomecánico. No emite diagnósticos ni reemplaza el criterio médico o libros de texto.
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-[#121212] border border-[#262626] rounded-2xl text-center">
+        <span class="text-[11px] font-mono text-neutral-500 block mb-1">Electiva Libre • Rommel</span>
+        <span class="text-xs text-neutral-400">Versión 1.0 Web & Mobile (Octubre 2026)</span>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL: FICHA MUSCULAR (ORIGEN Y FUNCIÓN)   -->
+    <!-- ========================================== -->
+    <div id="muscleModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all">
+      <div id="modalContent" class="w-full max-w-md bg-[#121212] border border-[#262626] rounded-t-3xl sm:rounded-2xl overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-200">
+        <!-- Injected dynamically by JS -->
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BOTTOM NAVIGATION BAR (Instagram style)   -->
+    <!-- ========================================== -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto bg-black/95 backdrop-blur-md border-t border-ig-border px-6 h-16 flex items-center justify-around">
+      <button id="navExplorer" class="flex flex-col items-center gap-1 text-accent transition-colors active:scale-95">
+        <span class="material-symbols-outlined text-2xl">home</span>
+        <span class="text-[10px] font-bold">Explorador</span>
+      </button>
+
+      <button id="navFlashcards" class="flex flex-col items-center gap-1 text-neutral-400 hover:text-white transition-colors active:scale-95">
+        <span class="material-symbols-outlined text-2xl">quiz</span>
+        <span class="text-[10px] font-bold">Flashcards</span>
+      </button>
+
+      <button id="navInfo" class="flex flex-col items-center gap-1 text-neutral-400 hover:text-white transition-colors active:scale-95">
+        <span class="material-symbols-outlined text-2xl">info</span>
+        <span class="text-[10px] font-bold">Info PRD</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

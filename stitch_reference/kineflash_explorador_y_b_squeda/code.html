@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-black" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>KineFlash - Explorador Anatómico</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          background: "#000000",
+          surface: "#121212",
+          "surface-card": "#18181b",
+          "surface-elevated": "#222226",
+          "ig-border": "#262626",
+          "ig-border-subtle": "#1e1e1e",
+          "ig-muted": "#a8a8a8",
+          "ig-subtext": "#737373",
+          accent: "#00f2fe",
+          "accent-teal": "#00dce6",
+          "accent-purple": "#833ab4",
+          "accent-pink": "#fd1d1d",
+          "accent-orange": "#fcb045"
+        },
+        fontFamily: {
+          sans: ["'Plus Jakarta Sans'", "sans-serif"],
+          mono: ["'JetBrains Mono'", "monospace"]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+  }
+  .material-symbols-outlined.fill-icon {
+    font-variation-settings: 'FILL' 1;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  /* Instagram Story gradient border */
+  .story-ring-active {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  }
+  .story-ring-cyan {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  }
+  body {
+    min-height: max(884px, 100dvh);
+  }
+</style>
+</head>
+<body class="bg-black text-white antialiased min-h-screen flex flex-col items-center font-sans selection:bg-neutral-800 selection:text-white">
+<!-- Mobile Shell Wrapper -->
+<div class="w-full max-w-md min-h-screen bg-black relative flex flex-col pb-24 border-x border-ig-border-subtle">
+<!-- Instagram Style Top App Bar -->
+<header class="sticky top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-14 bg-black/90 backdrop-blur-md border-b border-ig-border">
+<!-- Brand Logo -->
+<div class="flex items-center gap-2">
+<span class="text-[22px] font-extrabold tracking-tight text-white flex items-center gap-1.5">
+        KineFlash
+        <span class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-gradient-to-r from-accent to-accent-teal text-black tracking-wider uppercase">PRO</span>
+</span>
+</div>
+<!-- Actions (Heart / Direct Message / Notifications) -->
+<div class="flex items-center gap-3">
+<button aria-label="Notificaciones" class="p-1 text-white hover:text-neutral-300 transition-colors relative">
+<span class="material-symbols-outlined text-[23px]" data-icon="favorite_border">favorite</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-[#fd1d1d] rounded-full ring-2 ring-black"></span>
+</button>
+<button aria-label="Mensajes Clínicos" class="p-1 text-white hover:text-neutral-300 transition-colors relative">
+<span class="material-symbols-outlined text-[23px]" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+<span class="absolute -top-0.5 -right-1 px-1 bg-[#fe2c55] text-[9px] font-bold text-white rounded-full">3</span>
+</button>
+</div>
+</header>
+<!-- Instagram Stories Carousel for Anatomical Regions -->
+<section class="w-full pt-3 pb-2.5 border-b border-ig-border">
+<div class="flex items-center gap-3.5 px-4 overflow-x-auto no-scrollbar">
+<!-- Story: Todas (Your Story / Active) -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group">
+<div class="p-[2.5px] rounded-full story-ring-cyan transition-transform group-hover:scale-105">
+<div class="w-14 h-14 rounded-full bg-surface-card p-0.5 flex items-center justify-center border-2 border-black">
+<span class="material-symbols-outlined text-accent text-2xl" data-icon="all_inclusive">all_inclusive</span>
+</div>
+</div>
+<span class="text-[11px] font-medium text-white tracking-tight">Todas</span>
+</div>
+<!-- Story: Hombro (Active IG Gradient) -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group">
+<div class="p-[2.5px] rounded-full story-ring-active transition-transform group-hover:scale-105">
+<div class="w-14 h-14 rounded-full bg-surface-card p-0.5 flex items-center justify-center border-2 border-black">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="accessibility">accessibility</span>
+</div>
+</div>
+<span class="text-[11px] font-medium text-neutral-300 tracking-tight">Hombro</span>
+</div>
+<!-- Story: Codo (Active IG Gradient) -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group">
+<div class="p-[2.5px] rounded-full story-ring-active transition-transform group-hover:scale-105">
+<div class="w-14 h-14 rounded-full bg-surface-card p-0.5 flex items-center justify-center border-2 border-black">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="sports_handball">sports_handball</span>
+</div>
+</div>
+<span class="text-[11px] font-medium text-neutral-300 tracking-tight">Codo</span>
+</div>
+<!-- Story: Muñeca -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group">
+<div class="p-[2.5px] rounded-full story-ring-active transition-transform group-hover:scale-105">
+<div class="w-14 h-14 rounded-full bg-surface-card p-0.5 flex items-center justify-center border-2 border-black">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="pan_tool">pan_tool</span>
+</div>
+</div>
+<span class="text-[11px] font-medium text-neutral-300 tracking-tight">Muñeca</span>
+</div>
+<!-- Story: Rodilla -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group">
+<div class="p-[2.5px] rounded-full story-ring-active transition-transform group-hover:scale-105">
+<div class="w-14 h-14 rounded-full bg-surface-card p-0.5 flex items-center justify-center border-2 border-black">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="snowshoeing">snowshoeing</span>
+</div>
+</div>
+<span class="text-[11px] font-medium text-neutral-300 tracking-tight">Rodilla</span>
+</div>
+<!-- Story: Cadera -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group">
+<div class="p-[2.5px] rounded-full story-ring-active transition-transform group-hover:scale-105">
+<div class="w-14 h-14 rounded-full bg-surface-card p-0.5 flex items-center justify-center border-2 border-black">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="directions_walk">directions_walk</span>
+</div>
+</div>
+<span class="text-[11px] font-medium text-neutral-300 tracking-tight">Cadera</span>
+</div>
+<!-- Story: Columna (Viewed/Inactive ring) -->
+<div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group">
+<div class="p-[2px] rounded-full bg-ig-border transition-transform group-hover:scale-105">
+<div class="w-14 h-14 rounded-full bg-surface-card p-0.5 flex items-center justify-center border-2 border-black">
+<span class="material-symbols-outlined text-ig-muted text-2xl" data-icon="hdr_strong">hdr_strong</span>
+</div>
+</div>
+<span class="text-[11px] font-medium text-ig-muted tracking-tight">Columna</span>
+</div>
+</div>
+</section>
+<!-- Main Content Canvas -->
+<main class="w-full px-4 pt-3.5 flex-1 flex flex-col gap-4">
+<!-- Search Bar with IG Dark pill styling -->
+<section class="w-full">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-ig-muted text-lg pointer-events-none" data-icon="search">search</span>
+<input class="w-full pl-10 pr-10 py-2.5 bg-[#121212] text-white text-sm rounded-xl border border-ig-border focus:outline-none focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 transition-all placeholder:text-ig-subtext" placeholder="Buscar movimiento, articulación o músculo..." type="text"/>
+<button class="absolute right-3 p-0.5 text-ig-muted hover:text-white transition-colors" title="Filtros biomecánicos">
+<span class="material-symbols-outlined text-lg" data-icon="tune">tune</span>
+</button>
+</div>
+</section>
+<!-- Context / Section Header -->
+<div class="flex items-center justify-between pt-1">
+<div>
+<h2 class="text-base font-bold text-white tracking-tight flex items-center gap-1.5">
+<span>Movimientos frecuentes en clínica</span>
+<span class="material-symbols-outlined text-accent text-sm fill-icon" data-icon="verified">verified</span>
+</h2>
+<p class="text-[11px] text-ig-muted mt-0.5">Identificación de agonistas, articulaciones y vectores</p>
+</div>
+<span class="text-[11px] font-mono text-ig-muted bg-surface-card px-2.5 py-1 rounded-full border border-ig-border">
+        4 / 128
+      </span>
+</div>
+<!-- Feed / Biomechanical Post Cards List -->
+<section class="flex flex-col gap-3.5">
+<!-- Card 1: Flexión de Codo -->
+<article class="bg-[#121212] border border-ig-border rounded-2xl overflow-hidden hover:border-neutral-700 transition-all shadow-lg">
+<!-- Post Header -->
+<div class="flex items-center justify-between p-3.5 border-b border-ig-border-subtle bg-surface-card/60">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-500 flex items-center justify-center text-black font-bold text-xs shadow-inner">
+              FC
+            </div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="text-sm font-bold text-white tracking-tight">Flexión de Codo</h3>
+<span class="w-1 h-1 rounded-full bg-ig-muted"></span>
+<span class="text-[11px] font-mono text-accent">ROM 0°-150°</span>
+</div>
+<p class="text-[11px] text-ig-muted">Art. Húmero-radial / cubital</p>
+</div>
+</div>
+<!-- Plane Tag Badge -->
+<span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium tracking-wide bg-cyan-950/80 text-cyan-300 border border-cyan-500/30 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            Plano Sagital
+          </span>
+</div>
+<!-- Biomechanical Data Grid -->
+<div class="p-3.5 flex flex-col gap-3">
+<div class="grid grid-cols-2 gap-2.5 bg-black/50 border border-ig-border rounded-xl p-3">
+<div class="border-r border-ig-border pr-2">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ig-subtext block">Agonista Principal</span>
+<span class="text-xs font-bold text-white flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[13px] text-accent fill-icon" data-icon="check_circle">check_circle</span>
+                Braquial anterior
+              </span>
+</div>
+<div class="pl-1">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ig-subtext block">Sinergista</span>
+<span class="text-xs font-semibold text-neutral-200 mt-1 block truncate">
+                Bíceps braquial
+              </span>
+</div>
+</div>
+<!-- IG-Style Interaction Bar -->
+<div class="flex items-center justify-between pt-0.5">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-1.5 text-white hover:text-red-500 transition-colors group">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform" data-icon="favorite_border">favorite</span>
+<span class="text-xs font-medium text-ig-muted">342</span>
+</button>
+<button class="flex items-center gap-1.5 text-white hover:text-cyan-400 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="timeline">timeline</span>
+<span class="text-xs font-mono text-cyan-400 font-medium">Vectores</span>
+</button>
+<button class="text-white hover:text-neutral-300 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="send">send</span>
+</button>
+</div>
+<button class="text-white hover:text-accent transition-colors" title="Guardar">
+<span class="material-symbols-outlined text-xl" data-icon="bookmark_border">bookmark_border</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 2: Abducción de Hombro -->
+<article class="bg-[#121212] border border-ig-border rounded-2xl overflow-hidden hover:border-neutral-700 transition-all shadow-lg">
+<!-- Post Header -->
+<div class="flex items-center justify-between p-3.5 border-b border-ig-border-subtle bg-surface-card/60">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xs shadow-inner">
+              AH
+            </div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="text-sm font-bold text-white tracking-tight">Abducción de Hombro</h3>
+<span class="w-1 h-1 rounded-full bg-ig-muted"></span>
+<span class="text-[11px] font-mono text-accent">ROM 0°-180°</span>
+</div>
+<p class="text-[11px] text-ig-muted">Art. Glenohumeral</p>
+</div>
+</div>
+<!-- Plane Tag Badge -->
+<span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium tracking-wide bg-purple-950/80 text-purple-300 border border-purple-500/30 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+            Plano Frontal
+          </span>
+</div>
+<!-- Biomechanical Data Grid -->
+<div class="p-3.5 flex flex-col gap-3">
+<div class="grid grid-cols-2 gap-2.5 bg-black/50 border border-ig-border rounded-xl p-3">
+<div class="border-r border-ig-border pr-2">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ig-subtext block">Agonista Principal</span>
+<span class="text-xs font-bold text-white flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[13px] text-accent fill-icon" data-icon="check_circle">check_circle</span>
+                Deltoides (medio)
+              </span>
+</div>
+<div class="pl-1">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ig-subtext block">Iniciador (0-15°)</span>
+<span class="text-xs font-semibold text-neutral-200 mt-1 block truncate">
+                Supraespinoso
+              </span>
+</div>
+</div>
+<!-- IG-Style Interaction Bar -->
+<div class="flex items-center justify-between pt-0.5">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-1.5 text-white hover:text-red-500 transition-colors group">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform" data-icon="favorite_border">favorite</span>
+<span class="text-xs font-medium text-ig-muted">518</span>
+</button>
+<button class="flex items-center gap-1.5 text-white hover:text-cyan-400 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="timeline">timeline</span>
+<span class="text-xs font-mono text-cyan-400 font-medium">Vectores</span>
+</button>
+<button class="text-white hover:text-neutral-300 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="send">send</span>
+</button>
+</div>
+<button class="text-accent hover:text-white transition-colors" title="Guardado">
+<span class="material-symbols-outlined text-xl fill-icon" data-icon="bookmark">bookmark</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 3: Extensión de Rodilla -->
+<article class="bg-[#121212] border border-ig-border rounded-2xl overflow-hidden hover:border-neutral-700 transition-all shadow-lg">
+<!-- Post Header -->
+<div class="flex items-center justify-between p-3.5 border-b border-ig-border-subtle bg-surface-card/60">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-black font-bold text-xs shadow-inner">
+              ER
+            </div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="text-sm font-bold text-white tracking-tight">Extensión de Rodilla</h3>
+<span class="w-1 h-1 rounded-full bg-ig-muted"></span>
+<span class="text-[11px] font-mono text-accent">ROM 0°</span>
+</div>
+<p class="text-[11px] text-ig-muted">Art. Femorotibial</p>
+</div>
+</div>
+<!-- Plane Tag Badge -->
+<span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium tracking-wide bg-cyan-950/80 text-cyan-300 border border-cyan-500/30 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            Plano Sagital
+          </span>
+</div>
+<!-- Biomechanical Data Grid -->
+<div class="p-3.5 flex flex-col gap-3">
+<div class="grid grid-cols-2 gap-2.5 bg-black/50 border border-ig-border rounded-xl p-3">
+<div class="border-r border-ig-border pr-2">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ig-subtext block">Agonista Principal</span>
+<span class="text-xs font-bold text-white flex items-center gap-1 mt-1 truncate">
+<span class="material-symbols-outlined text-[13px] text-accent fill-icon" data-icon="check_circle">check_circle</span>
+                Cuádriceps femoral
+              </span>
+</div>
+<div class="pl-1">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ig-subtext block">Inervación</span>
+<span class="text-xs font-semibold text-neutral-200 mt-1 block truncate">
+                N. femoral (L2-L4)
+              </span>
+</div>
+</div>
+<!-- IG-Style Interaction Bar -->
+<div class="flex items-center justify-between pt-0.5">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-1.5 text-white hover:text-red-500 transition-colors group">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform" data-icon="favorite_border">favorite</span>
+<span class="text-xs font-medium text-ig-muted">289</span>
+</button>
+<button class="flex items-center gap-1.5 text-white hover:text-cyan-400 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="timeline">timeline</span>
+<span class="text-xs font-mono text-cyan-400 font-medium">Vectores</span>
+</button>
+<button class="text-white hover:text-neutral-300 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="send">send</span>
+</button>
+</div>
+<button class="text-white hover:text-accent transition-colors" title="Guardar">
+<span class="material-symbols-outlined text-xl" data-icon="bookmark_border">bookmark_border</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 4: Rotación Externa de Cadera -->
+<article class="bg-[#121212] border border-ig-border rounded-2xl overflow-hidden hover:border-neutral-700 transition-all shadow-lg">
+<!-- Post Header -->
+<div class="flex items-center justify-between p-3.5 border-b border-ig-border-subtle bg-surface-card/60">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-black font-bold text-xs shadow-inner">
+              RC
+            </div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="text-sm font-bold text-white tracking-tight">Rotación Externa Cadera</h3>
+<span class="w-1 h-1 rounded-full bg-ig-muted"></span>
+<span class="text-[11px] font-mono text-accent">ROM 0°-45°</span>
+</div>
+<p class="text-[11px] text-ig-muted">Art. Coxofemoral</p>
+</div>
+</div>
+<!-- Plane Tag Badge -->
+<span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-medium tracking-wide bg-amber-950/80 text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            Plano Transversal
+          </span>
+</div>
+<!-- Biomechanical Data Grid -->
+<div class="p-3.5 flex flex-col gap-3">
+<div class="grid grid-cols-2 gap-2.5 bg-black/50 border border-ig-border rounded-xl p-3">
+<div class="border-r border-ig-border pr-2">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ig-subtext block">Pelvitrocantéreos</span>
+<span class="text-xs font-bold text-white flex items-center gap-1 mt-1 truncate">
+<span class="material-symbols-outlined text-[13px] text-accent fill-icon" data-icon="check_circle">check_circle</span>
+                Obturador int. / Piriforme
+              </span>
+</div>
+<div class="pl-1">
+<span class="text-[10px] uppercase font-mono tracking-wider text-ig-subtext block">Sinergista Potente</span>
+<span class="text-xs font-semibold text-neutral-200 mt-1 block truncate">
+                Glúteo mayor
+              </span>
+</div>
+</div>
+<!-- IG-Style Interaction Bar -->
+<div class="flex items-center justify-between pt-0.5">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-1.5 text-white hover:text-red-500 transition-colors group">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform" data-icon="favorite_border">favorite</span>
+<span class="text-xs font-medium text-ig-muted">194</span>
+</button>
+<button class="flex items-center gap-1.5 text-white hover:text-cyan-400 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="timeline">timeline</span>
+<span class="text-xs font-mono text-cyan-400 font-medium">Vectores</span>
+</button>
+<button class="text-white hover:text-neutral-300 transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="send">send</span>
+</button>
+</div>
+<button class="text-white hover:text-accent transition-colors" title="Guardar">
+<span class="material-symbols-outlined text-xl" data-icon="bookmark_border">bookmark_border</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+<!-- Interactive Clinical Study Card (Reels / Promo Banner) -->
+<section class="mt-1 rounded-2xl bg-gradient-to-r from-[#18181b] via-[#1f1f23] to-[#141418] border border-ig-border p-4 relative overflow-hidden shadow-xl">
+<div class="absolute -right-8 -top-8 w-28 h-28 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-full blur-xl pointer-events-none"></div>
+<div class="relative z-10 flex items-center justify-between">
+<div class="flex flex-col gap-1 pr-3">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-accent animate-ping"></span>
+<span class="text-[10px] font-mono font-bold text-accent uppercase tracking-wider">Sesión Activa</span>
+</div>
+<h4 class="text-sm font-bold text-white">Modo Flashcard de estudio rápido</h4>
+<p class="text-[11px] text-ig-muted leading-tight">
+            25 tarjetas pendientes para memorizar inserciones y planos.
+          </p>
+</div>
+<button class="shrink-0 bg-white hover:bg-neutral-200 text-black text-xs font-bold px-4 py-2 rounded-xl active:scale-95 transition-all flex items-center gap-1 shadow-md">
+<span>Iniciar</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Minimalist Instagram-Style Dark Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-14 max-w-md mx-auto bg-black/95 backdrop-blur-md border-t border-ig-border px-2">
+<!-- Home / Feed (Active Movimientos) -->
+<a class="flex flex-col items-center justify-center p-2 text-white active:scale-90 transition-transform" href="#" title="Movimientos">
+<span class="material-symbols-outlined fill-icon text-[26px]" data-icon="home">home</span>
+</a>
+<!-- Explore / Regiones -->
+<a class="flex flex-col items-center justify-center p-2 text-ig-muted hover:text-white active:scale-90 transition-transform" href="#" title="Regiones">
+<span class="material-symbols-outlined text-[26px]" data-icon="search">search</span>
+</a>
+<!-- Reels / Repaso Flashcards -->
+<a class="flex flex-col items-center justify-center p-2 text-ig-muted hover:text-white active:scale-90 transition-transform" href="#" title="Repaso">
+<span class="material-symbols-outlined text-[26px]" data-icon="movie">movie</span>
+</a>
+<!-- Saved / Marcadores -->
+<a class="flex flex-col items-center justify-center p-2 text-ig-muted hover:text-white active:scale-90 transition-transform" href="#" title="Marcadores">
+<span class="material-symbols-outlined text-[26px]" data-icon="bookmark_border">bookmark_border</span>
+</a>
+<!-- User Profile / Clinical Profile Avatar -->
+<a class="flex flex-col items-center justify-center p-2 active:scale-90 transition-transform" href="#" title="Perfil">
+<div class="w-6 h-6 rounded-full ring-2 ring-transparent hover:ring-white p-0.5 transition-all">
+<div class="w-full h-full rounded-full bg-gradient-to-tr from-accent to-accent-teal flex items-center justify-center text-[10px] font-bold text-black">
+          K
+        </div>
+</div>
+</a>
+</nav>
+</div>
+</body></html>
