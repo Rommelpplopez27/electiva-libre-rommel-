@@ -1,5 +1,5 @@
 // =============================================================================
-// KineFlash PRO - Motor de Interacción, Cinemática y Reproductor Biomecánico
+// KineFlash PRO - Motor de Interacción, Búsqueda y Cinemática Biomecánica Unificada
 // =============================================================================
 
 let currentRegion = "all";
@@ -10,8 +10,8 @@ let flashcardIndex = 0;
 let flashcardFlipped = false;
 let flashcardStreak = 0;
 
-// Estado del reproductor por tarjeta: { [movementId]: { mode: 'anim'|'gif', speed: 1.0, paused: false } }
-const playerState = {};
+// Estado de pausa por movimiento: { [movementId]: boolean }
+const animationPausedState = {};
 
 document.addEventListener("DOMContentLoaded", () => {
   renderStories();
@@ -112,261 +112,280 @@ function setupSearchListener() {
 }
 
 // -----------------------------------------------------------------------------
-// 4. Generador de Animaciones Biomecánicas Vectoriales (60 FPS Vector Loops)
+// 4. Generador del Reproductor Visual Unificado por Movimiento (Sin duplicados)
 // -----------------------------------------------------------------------------
-function generateBiomechanicalSvg(animationType, primaryMuscleName) {
-  switch (animationType) {
+function renderUnifiedMotionPlayer(movement) {
+  const isPaused = !!animationPausedState[movement.id];
+  let svgContent = "";
+
+  switch (movement.animationType) {
     case "elbow-flexion":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
           <defs>
-            <linearGradient id="muscleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="efGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#00f2fe"/>
               <stop offset="100%" stop-color="#006a70"/>
             </linearGradient>
           </defs>
-          <!-- Brazo Fijo (Húmero) -->
-          <line x1="160" y1="25" x2="160" y2="105" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
-          <circle cx="160" cy="25" r="10" fill="#64748b"/>
+          <!-- Húmero Fijo -->
+          <line x1="160" y1="22" x2="160" y2="105" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="160" cy="22" r="10" fill="#64748b"/>
           <text x="175" y="30" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">HÚMERO</text>
           
           <!-- Eje Articular Troclear -->
           <circle cx="160" cy="105" r="7" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
           <text x="175" y="110" fill="#38bdf8" font-size="9" font-family="JetBrains Mono">Eje Tróclea</text>
 
-          <!-- Antebrazo Móvil (Cúbito y Radio) con Animación en Bucle -->
+          <!-- Antebrazo Móvil en Bucle -->
           <g class="motion-loop-elbow-flexion">
             <line x1="160" y1="105" x2="160" y2="170" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
             <circle cx="160" cy="170" r="6" fill="#cbd5e1"/>
-            <text x="172" y="150" fill="#cbd5e1" font-size="9" font-family="JetBrains Mono">Radio/Cúbito</text>
-            <!-- Inserción Dinámica -->
-            <circle cx="160" cy="118" r="4" fill="#fcb045" stroke="#fff" stroke-width="1.5"/>
+            <text x="172" y="152" fill="#cbd5e1" font-size="9" font-family="JetBrains Mono">Cúbito/Radio</text>
+            <circle cx="160" cy="120" r="4" fill="#fcb045" stroke="#fff" stroke-width="1.5"/>
           </g>
 
-          <!-- Vientre Muscular Resaltado en Contracción (Braquial / Bíceps) -->
-          <path d="M 152 45 Q 135 75 152 105" fill="none" stroke="url(#muscleGrad)" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <!-- Pin de Origen Anatómico -->
-          <circle cx="152" cy="45" r="4" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <text x="60" y="50" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">📍 Origen: Cara ant. húmero</text>
-          <text x="45" y="90" fill="#38bdf8" font-size="10" font-family="JetBrains Mono">⚡ ${primaryMuscleName}</text>
+          <!-- Vientre Muscular Resaltado (Braquial / Bíceps) -->
+          <path d="M 152 45 Q 135 75 152 105" fill="none" stroke="url(#efGrad)" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
+          <circle cx="152" cy="45" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
+          <text x="45" y="55" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">📍 Origen: Húmero distal</text>
+          <text x="45" y="90" fill="#38bdf8" font-size="10" font-family="JetBrains Mono">⚡ Braquial + Bíceps</text>
         </svg>
       `;
+      break;
 
     case "elbow-extension":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
-          <!-- Húmero -->
-          <line x1="160" y1="25" x2="160" y2="105" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
-          <circle cx="160" cy="25" r="10" fill="#64748b"/>
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
+          <line x1="160" y1="22" x2="160" y2="105" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="160" cy="22" r="10" fill="#64748b"/>
           <text x="175" y="30" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">HÚMERO</text>
-          
-          <!-- Eje Húmero-cubital -->
           <circle cx="160" cy="105" r="7" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
 
           <!-- Tríceps Posterior Resaltado en Contracción -->
           <path d="M 168 35 Q 185 70 166 102" fill="none" stroke="#fd1d1d" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
           <circle cx="168" cy="35" r="4" fill="#fd1d1d" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <text x="185" y="50" fill="#ff7675" font-size="10" font-family="JetBrains Mono" font-weight="bold">📍 Tríceps (Olécranon)</text>
+          <text x="180" y="50" fill="#ff7675" font-size="10" font-family="JetBrains Mono" font-weight="bold">📍 Tríceps (3 Cabezas)</text>
 
           <!-- Antebrazo Extendiéndose -->
           <g class="motion-loop-elbow-extension">
             <line x1="160" y1="105" x2="160" y2="170" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
             <circle cx="160" cy="170" r="6" fill="#cbd5e1"/>
           </g>
-          <text x="35" y="95" fill="#38bdf8" font-size="10" font-family="JetBrains Mono">⚡ Extensión Terminal</text>
+          <text x="35" y="95" fill="#38bdf8" font-size="10" font-family="JetBrains Mono">⚡ Tríceps + Ancóneo</text>
         </svg>
       `;
+      break;
 
     case "shoulder-abduction":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
           <!-- Tronco y Escápula -->
           <path d="M 160 40 L 160 160" stroke="#334155" stroke-width="16" stroke-linecap="round"/>
           <path d="M 160 40 L 130 65 L 145 95 Z" fill="#1e293b" stroke="#475569"/>
           <text x="75" y="65" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">ESCÁPULA</text>
 
-          <!-- Acromion y Deltoides Agonista -->
           <circle cx="160" cy="40" r="8" fill="#d5baff" stroke="#833ab4" stroke-width="2"/>
           <text x="175" y="40" fill="#d5baff" font-size="9" font-family="JetBrains Mono">Acromion</text>
 
-          <!-- Brazo en Abducción Frontal Móvil -->
+          <!-- Brazo en Abducción Frontal -->
           <g class="motion-loop-shoulder-abduction">
             <line x1="160" y1="40" x2="160" y2="125" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
             <circle cx="160" cy="125" r="7" fill="#cbd5e1"/>
-            <!-- Inserción V deltoidea -->
             <circle cx="160" cy="75" r="4" fill="#fcb045" stroke="#fff" stroke-width="1.5"/>
           </g>
 
-          <!-- Vientre del Deltoides Medio & Supraespinoso -->
-          <path d="M 160 40 Q 185 55 165 75" fill="none" stroke="#d5baff" stroke-width="7" stroke-linecap="round" class="muscle-contract"/>
+          <!-- Deltoides Acromial y Supraespinoso Resaltados -->
+          <path d="M 160 40 Q 185 55 165 75" fill="none" stroke="#d5baff" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
           <circle cx="160" cy="40" r="4.5" fill="#d5baff" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
           <text x="40" y="115" fill="#d5baff" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Deltoides (3 Cabezas)</text>
-          <text x="40" y="130" fill="#cbd5e1" font-size="9" font-family="JetBrains Mono">0° a 90° Frontal</text>
+          <text x="40" y="130" fill="#cbd5e1" font-size="9" font-family="JetBrains Mono">Acromial + Clavicular + Espinal</text>
         </svg>
       `;
+      break;
 
     case "shoulder-flexion":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
-          <!-- Tronco Sagital -->
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
           <line x1="155" y1="35" x2="155" y2="160" stroke="#334155" stroke-width="18" stroke-linecap="round"/>
           <circle cx="155" cy="35" r="9" fill="#00f2fe"/>
           <text x="75" y="40" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">CLAVÍCULA</text>
 
-          <!-- Brazo Elevándose al Frente (Flexión) -->
           <g class="motion-loop-shoulder-flexion">
             <line x1="155" y1="35" x2="155" y2="120" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
             <circle cx="155" cy="120" r="6" fill="#cbd5e1"/>
           </g>
 
-          <!-- Deltoides Anterior y Coracobraquial -->
           <path d="M 155 35 Q 130 55 150 75" fill="none" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
           <circle cx="155" cy="35" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
           <text x="35" y="105" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Deltoides Clavicular</text>
+          <text x="35" y="120" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">+ Coracobraquial</text>
         </svg>
       `;
+      break;
 
     case "knee-extension":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
-          <!-- Fémur Fijo -->
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
           <line x1="100" y1="95" x2="160" y2="95" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
           <text x="95" y="80" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">FÉMUR</text>
-
-          <!-- Rótula y Polea Patelar -->
           <circle cx="160" cy="95" r="7" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
           <ellipse cx="162" cy="88" rx="5" ry="4" fill="#fcb045"/>
           <text x="175" y="88" fill="#fcb045" font-size="9" font-family="JetBrains Mono">Rótula</text>
 
-          <!-- Cuádriceps (4 Cabezas en Contracción) -->
           <path d="M 105 85 Q 135 75 162 88" fill="none" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
           <circle cx="105" cy="85" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
 
-          <!-- Tibia Extendiéndose hacia adelante -->
           <g class="motion-loop-knee-extension">
             <line x1="160" y1="95" x2="225" y2="95" stroke="#94a3b8" stroke-width="11" stroke-linecap="round"/>
             <circle cx="225" cy="95" r="6" fill="#cbd5e1"/>
           </g>
           <text x="35" y="135" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Cuádriceps (4 Cabezas)</text>
-          <text x="35" y="150" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Recto Femoral + 3 Vastos</text>
+          <text x="35" y="150" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Recto + Vasto Med/Lat/Interm</text>
         </svg>
       `;
+      break;
 
     case "knee-flexion":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
-          <!-- Fémur -->
-          <line x1="160" y1="25" x2="160" y2="95" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
+          <line x1="160" y1="22" x2="160" y2="95" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
           <circle cx="160" cy="95" r="7" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
           <text x="90" y="45" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">FÉMUR</text>
 
-          <!-- Isquiotibiales Posteriores -->
           <path d="M 166 30 Q 185 65 166 92" fill="none" stroke="#833ab4" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
           <circle cx="166" cy="30" r="4.5" fill="#d5baff" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
           <text x="180" y="35" fill="#d5baff" font-size="9" font-family="JetBrains Mono">Tuberosidad Isquiática</text>
 
-          <!-- Pierna Flexionándose hacia atrás -->
           <g class="motion-loop-knee-flexion">
             <line x1="160" y1="95" x2="160" y2="165" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
             <circle cx="160" cy="165" r="6" fill="#cbd5e1"/>
           </g>
-          <text x="35" y="120" fill="#d5baff" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Isquiosurales (Bíceps/Semis)</text>
+          <text x="35" y="120" fill="#d5baff" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Isquiotibiales + Poplíteo</text>
+          <text x="35" y="135" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Bíceps Femoral, Semis y Gemelos</text>
         </svg>
       `;
+      break;
 
     case "hip-flexion":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
-          <!-- Columna y Pelvis Fijas -->
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
           <line x1="160" y1="20" x2="160" y2="65" stroke="#334155" stroke-width="16" stroke-linecap="round"/>
           <circle cx="160" cy="65" r="8" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
           <text x="90" y="35" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">PELVIS/LUMBAR</text>
 
-          <!-- Psoas-Ilíaco Resaltado -->
           <path d="M 160 25 Q 140 45 155 75" fill="none" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
           <circle cx="160" cy="25" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
           <text x="40" y="55" fill="#00f2fe" font-size="9" font-family="JetBrains Mono">T12-L5 y Fosa Ilíaca</text>
 
-          <!-- Muslo en Flexión Sagital -->
           <g class="motion-loop-hip-flexion">
             <line x1="160" y1="65" x2="160" y2="145" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
             <circle cx="160" cy="145" r="7" fill="#cbd5e1"/>
           </g>
-          <text x="40" y="115" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Psoas-Ilíaco</text>
+          <text x="40" y="115" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Psoas Mayor + Ilíaco</text>
+          <text x="40" y="130" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Recto Femoral, Sartorio y TFL</text>
         </svg>
       `;
+      break;
 
     case "hip-abduction":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
-          <!-- Pelvis Frontal -->
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
           <path d="M 130 50 Q 160 30 190 50" fill="none" stroke="#475569" stroke-width="12"/>
           <circle cx="160" cy="65" r="8" fill="#0f172a" stroke="#d5baff" stroke-width="2"/>
           <text x="95" y="40" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Cresta Ilíaca</text>
 
-          <!-- Glúteo Medio (Abductor y Estabilizador) -->
           <path d="M 175 40 Q 195 55 170 75" fill="none" stroke="#d5baff" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
           <circle cx="175" cy="40" r="4.5" fill="#d5baff" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
 
-          <!-- Miembro Inferior Abduciéndose Lateralmente -->
           <g class="motion-loop-hip-abduction">
             <line x1="160" y1="65" x2="160" y2="150" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
             <circle cx="160" cy="150" r="6" fill="#cbd5e1"/>
           </g>
-          <text x="35" y="110" fill="#d5baff" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Glúteo Medio</text>
-          <text x="35" y="125" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Trendelenburg</text>
+          <text x="35" y="110" fill="#d5baff" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Glúteo Medio + Menor</text>
+          <text x="35" y="125" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Pilar de Trendelenburg</text>
         </svg>
       `;
+      break;
 
     case "ankle-dorsiflexion":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
-          <!-- Tibia Vertical -->
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
           <line x1="160" y1="20" x2="160" y2="125" stroke="#475569" stroke-width="13" stroke-linecap="round"/>
           <text x="95" y="55" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">TIBIA</text>
-
-          <!-- Articulación Talocrural -->
           <circle cx="160" cy="125" r="7" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
 
-          <!-- Tibial Anterior Contrayéndose -->
           <path d="M 152 40 Q 145 85 152 125" fill="none" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
           <circle cx="152" cy="40" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
 
-          <!-- Pie Dorsiflexionando (Subiendo la punta) -->
           <g class="motion-loop-ankle-dorsiflexion">
             <line x1="160" y1="125" x2="220" y2="135" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
             <circle cx="220" cy="135" r="6" fill="#cbd5e1"/>
-            <text x="210" y="155" fill="#cbd5e1" font-size="9" font-family="JetBrains Mono">Dorso</text>
+            <text x="210" y="155" fill="#cbd5e1" font-size="9" font-family="JetBrains Mono">Dorso Pie</text>
           </g>
-          <text x="35" y="95" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Tibial Anterior</text>
+          <text x="35" y="95" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Tibial Anterior + Extensores</text>
+          <text x="35" y="110" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Largo Dedos, Hallux y 3er Peroneo</text>
         </svg>
       `;
+      break;
 
     case "ankle-plantarflexion":
-      return `
-        <svg viewBox="0 0 320 180" class="w-full h-40 bg-gradient-to-b from-[#18181b] to-black rounded-xl border border-[#262626]">
-          <!-- Tibia -->
+      svgContent = `
+        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
           <line x1="160" y1="20" x2="160" y2="125" stroke="#475569" stroke-width="13" stroke-linecap="round"/>
           <circle cx="160" cy="125" r="7" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
-          <text x="80" y="45" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">FÉMUR/TIBIA</text>
+          <text x="80" y="45" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">TIBIA/FÉMUR</text>
 
-          <!-- Tríceps Sural y Tendón de Aquiles Potente -->
           <path d="M 166 30 Q 185 75 166 122" fill="none" stroke="#fd1d1d" stroke-width="9" stroke-linecap="round" class="muscle-contract"/>
           <circle cx="166" cy="30" r="4.5" fill="#ff7675" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
           <text x="180" y="80" fill="#ff7675" font-size="9" font-family="JetBrains Mono">Tendón Aquiles</text>
 
-          <!-- Pie en Flexión Plantar (Puntillas) -->
           <g class="motion-loop-ankle-plantarflexion">
             <line x1="160" y1="125" x2="215" y2="160" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
             <circle cx="215" cy="160" r="6" fill="#cbd5e1"/>
           </g>
           <text x="35" y="110" fill="#ff7675" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Gastrocnemios + Sóleo</text>
+          <text x="35" y="125" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Tibial Posterior y Flexores</text>
         </svg>
       `;
+      break;
 
     default:
-      return `<div class="h-32 flex items-center justify-center text-xs text-neutral-500 font-mono">Cinemática en preparación</div>`;
+      svgContent = `<div class="h-44 flex items-center justify-center text-xs text-neutral-500 font-mono">Cinemática en bucle activa</div>`;
   }
+
+  return `
+    <div class="relative w-full overflow-hidden rounded-xl border border-[#262626] shadow-inner bg-black ${isPaused ? 'animation-paused' : ''}">
+      <!-- Header Superior del Reproductor Único -->
+      <div class="absolute top-2 left-2 right-2 z-10 flex items-center justify-between pointer-events-none">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/80 backdrop-blur-md border border-[#333] text-[9px] font-mono text-cyan-300 font-bold uppercase tracking-wider">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          Loop Cinemático 60 FPS
+        </span>
+        <button 
+          onclick="togglePauseMovement('${movement.id}')"
+          class="pointer-events-auto p-1 rounded-full bg-black/80 hover:bg-[#262626] border border-[#333] text-neutral-300 hover:text-white transition-all">
+          <span class="material-symbols-outlined text-[15px]">${isPaused ? 'play_arrow' : 'pause'}</span>
+        </button>
+      </div>
+
+      <!-- Animación Biomecánica en Bucle Única -->
+      ${svgContent}
+
+      <!-- Pie del Reproductor con Músculos Activos Resaltados -->
+      <div class="px-3 py-1.5 bg-[#141416] border-t border-[#222] flex items-center justify-between text-[10px] font-mono">
+        <span class="text-neutral-400 truncate">
+          <strong class="text-accent">Resaltado:</strong> ${movement.highlightedMuscle}
+        </span>
+        <span class="text-neutral-500 shrink-0 ml-2">ROM: ${movement.rom.split(" ")[0]}</span>
+      </div>
+    </div>
+  `;
+}
+
+function togglePauseMovement(movementId) {
+  animationPausedState[movementId] = !animationPausedState[movementId];
+  renderMovementFeed();
 }
 
 // -----------------------------------------------------------------------------
@@ -400,7 +419,7 @@ function renderMovementFeed() {
   const movements = getFilteredMovements();
 
   if (countIndicator) {
-    countIndicator.textContent = `${movements.length} de ${ANATOMY_DATABASE.movements.length} con video/loop`;
+    countIndicator.textContent = `${movements.length} de ${ANATOMY_DATABASE.movements.length} movimientos`;
   }
 
   if (movements.length === 0) {
@@ -408,7 +427,7 @@ function renderMovementFeed() {
       <div class="p-8 text-center bg-[#121212] border border-[#262626] rounded-2xl flex flex-col items-center gap-3">
         <span class="material-symbols-outlined text-4xl text-neutral-500">search_off</span>
         <p class="text-sm text-neutral-300 font-medium">No se encontraron movimientos para tu búsqueda.</p>
-        <p class="text-xs text-neutral-500">Prueba con "deltoides", "codo", "isquiotibiales", "cuádriceps" o "tobillo".</p>
+        <p class="text-xs text-neutral-500">Prueba buscando "deltoides", "codo", "cuádriceps", "isquiotibiales" o "tobillo".</p>
         <button onclick="resetFilters()" class="mt-2 px-4 py-1.5 rounded-lg bg-accent text-black text-xs font-bold">
           Restablecer filtros
         </button>
@@ -426,12 +445,6 @@ function renderMovementFeed() {
       Transversal: "bg-emerald-950/80 text-emerald-300 border-emerald-500/40"
     };
     const planeStyle = planeColors[m.plane] || planeColors.Sagital;
-
-    // Estado del reproductor
-    if (!playerState[m.id]) {
-      playerState[m.id] = { mode: "anim", speed: 1.0, paused: false };
-    }
-    const state = playerState[m.id];
 
     return `
       <article class="bg-[#121212] border border-[#262626] rounded-2xl overflow-hidden hover:border-neutral-600 transition-all shadow-xl">
@@ -457,63 +470,14 @@ function renderMovementFeed() {
           </span>
         </div>
 
-        <!-- REPRODUCTOR BIOMECÁNICO / LOOP DE VIDEO & ANIMACIÓN -->
-        <div class="p-3 bg-black/40 border-b border-[#262626]">
-          <!-- Switcher de Modo: Animación Vectorial vs Video/GIF Clínico -->
-          <div class="flex items-center justify-between mb-2">
-            <div class="flex items-center gap-1 bg-[#18181b] p-0.5 rounded-lg border border-[#262626]">
-              <button 
-                onclick="toggleCardMediaMode('${m.id}', 'anim')"
-                class="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold flex items-center gap-1 transition-all ${
-                  state.mode === 'anim' ? 'bg-accent text-black shadow-sm' : 'text-neutral-400 hover:text-white'
-                }">
-                <span class="material-symbols-outlined text-[12px]">animation</span>
-                Loop 60fps
-              </button>
-              <button 
-                onclick="toggleCardMediaMode('${m.id}', 'gif')"
-                class="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold flex items-center gap-1 transition-all ${
-                  state.mode === 'gif' ? 'bg-accent text-black shadow-sm' : 'text-neutral-400 hover:text-white'
-                }">
-                <span class="material-symbols-outlined text-[12px]">videocam</span>
-                Video / GIF
-              </button>
-            </div>
-
-            <!-- Controles de Velocidad (Normal 1.0x / Cámara Lenta 0.5x / Pausa) -->
-            <div class="flex items-center gap-1.5 text-xs text-neutral-400">
-              <button 
-                onclick="togglePauseAnimation('${m.id}')"
-                class="p-1 rounded bg-[#18181b] hover:text-accent border border-[#262626]"
-                title="Pausar / Reproducir">
-                <span class="material-symbols-outlined text-sm">${state.paused ? 'play_arrow' : 'pause'}</span>
-              </button>
-              <button 
-                onclick="toggleSpeedAnimation('${m.id}')"
-                class="px-2 py-0.5 rounded bg-[#18181b] hover:text-accent border border-[#262626] font-mono text-[10px] font-bold">
-                ${state.speed === 1.0 ? '1.0x' : '0.5x 🐢'}
-              </button>
-            </div>
-          </div>
-
-          <!-- Contenedor del Media (Loop o Video/GIF) -->
-          <div id="media-container-${m.id}" class="${state.paused ? 'animation-paused' : ''} ${state.speed === 0.5 ? 'animation-slowmo' : ''}">
-            ${state.mode === 'anim' ? generateBiomechanicalSvg(m.animationType, m.primaryMuscle) : `
-              <div class="relative w-full h-40 rounded-xl overflow-hidden border border-[#262626] bg-black">
-                <img src="${m.gifUrl}" alt="${m.name}" class="w-full h-full object-cover opacity-85 hover:opacity-100 transition-opacity" loading="lazy"/>
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex items-end p-2.5">
-                  <span class="text-[10px] font-mono text-cyan-300 bg-black/70 px-2 py-0.5 rounded border border-cyan-500/30">
-                    🎬 Referencia Biomecánica en Bucle
-                  </span>
-                </div>
-              </div>
-            `}
-          </div>
+        <!-- UNICO CONTENEDOR VISUAL CON LA ANIMACIÓN BIOMECÁNICA DEL MOVIMIENTO -->
+        <div class="p-3 bg-black/50 border-b border-[#222]">
+          ${renderUnifiedMotionPlayer(m)}
         </div>
 
         <!-- Biomechanical Body -->
         <div class="p-3.5 flex flex-col gap-3">
-          <!-- Detalles Rápidos -->
+          <!-- Detalles Cinemáticos Rápidos -->
           <div class="flex items-center justify-between text-[11px] text-neutral-400 bg-black/40 px-3 py-1.5 rounded-lg border border-[#262626]">
             <span class="font-mono text-neutral-300"><strong>ROM:</strong> ${m.rom}</span>
             <span class="font-mono text-neutral-400"><strong>Eje:</strong> ${m.axis.split(" ")[1] || 'Transversal'}</span>
@@ -521,38 +485,57 @@ function renderMovementFeed() {
 
           <p class="text-xs text-neutral-300 leading-relaxed">${m.description}</p>
 
-          <!-- Grid de Músculos (Interactivo con clic) -->
+          <!-- Lista de Músculos Participantes (Motores Primarios, Secundarios y Sinergistas) -->
           <div class="flex flex-col gap-1.5">
-            <span class="text-[10px] uppercase font-mono tracking-wider text-neutral-500 font-semibold">
-              Músculos Participantes (Toca para ver Origen, Inserción y Función):
-            </span>
-            <div class="grid grid-cols-1 gap-2">
-              ${m.muscles.map(muscle => `
-                <button 
-                  onclick="openMuscleModal('${m.id}', '${muscle.id}')"
-                  class="text-left p-2.5 rounded-xl border transition-all flex items-start justify-between group active:scale-98 ${
-                    muscle.roleType === 'primary' 
-                      ? 'bg-[#162024] border-cyan-800/40 hover:border-cyan-400' 
-                      : 'bg-[#18181b] border-[#262626] hover:border-neutral-500'
-                  }">
-                  <div class="flex-1 pr-2">
-                    <span class="text-[9px] font-mono uppercase tracking-wider block font-bold ${
-                      muscle.roleType === 'primary' ? 'text-accent' : 'text-neutral-400'
-                    }">
-                      ${muscle.role}
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] uppercase font-mono tracking-wider text-neutral-400 font-bold">
+                Músculos Participantes (${m.muscles.length}):
+              </span>
+              <span class="text-[9px] font-mono text-accent">Toca para abrir Ficha</span>
+            </div>
+
+            <div class="grid grid-cols-1 gap-1.5">
+              ${m.muscles.map(muscle => {
+                let badgeClass = "bg-cyan-950/80 text-cyan-300 border-cyan-800";
+                let roleColor = "text-accent";
+                let cardBg = "bg-[#162024] border-cyan-800/40 hover:border-cyan-400";
+
+                if (muscle.roleType === 'secondary') {
+                  badgeClass = "bg-amber-950/80 text-amber-300 border-amber-800";
+                  roleColor = "text-amber-400";
+                  cardBg = "bg-[#1c1c18] border-amber-900/30 hover:border-amber-400";
+                } else if (muscle.roleType === 'synergist') {
+                  badgeClass = "bg-neutral-800 text-neutral-300 border-neutral-700";
+                  roleColor = "text-neutral-400";
+                  cardBg = "bg-[#18181b] border-[#262626] hover:border-neutral-500";
+                }
+
+                return `
+                  <button 
+                    onclick="openMuscleModal('${m.id}', '${muscle.id}')"
+                    class="text-left p-2.5 rounded-xl border transition-all flex items-start justify-between group active:scale-98 ${cardBg}">
+                    <div class="flex-1 pr-2">
+                      <div class="flex items-center gap-1.5 mb-0.5">
+                        <span class="text-[8px] font-mono uppercase tracking-wider px-1.5 py-0.2 rounded border font-bold ${badgeClass}">
+                          ${muscle.role.split(" ")[0]} ${muscle.role.split(" ")[1] || ''}
+                        </span>
+                        <span class="text-[10px] font-mono text-neutral-400 truncate">
+                          ${muscle.compartment.split("(")[0]}
+                        </span>
+                      </div>
+                      <span class="text-xs font-bold text-white group-hover:text-accent transition-colors flex items-center gap-1 mt-0.5">
+                        ${muscle.name}
+                      </span>
+                      <span class="text-[10px] text-neutral-400 italic block mt-0.5 line-clamp-1">
+                        ${muscle.scientificName}
+                      </span>
+                    </div>
+                    <span class="material-symbols-outlined text-sm text-neutral-500 group-hover:text-accent transition-colors shrink-0 mt-2">
+                      chevron_right
                     </span>
-                    <span class="text-xs font-bold text-white group-hover:text-accent transition-colors flex items-center gap-1 mt-0.5">
-                      ${muscle.name}
-                    </span>
-                    <span class="text-[10px] text-neutral-400 italic block">
-                      ${muscle.scientificName}
-                    </span>
-                  </div>
-                  <span class="material-symbols-outlined text-sm text-neutral-500 group-hover:text-accent transition-colors shrink-0 mt-1">
-                    chevron_right
-                  </span>
-                </button>
-              `).join("")}
+                  </button>
+                `;
+              }).join("")}
             </div>
           </div>
         </div>
@@ -575,27 +558,6 @@ function renderMovementFeed() {
   }).join("");
 }
 
-function toggleCardMediaMode(movementId, mode) {
-  if (playerState[movementId]) {
-    playerState[movementId].mode = mode;
-    renderMovementFeed();
-  }
-}
-
-function togglePauseAnimation(movementId) {
-  if (playerState[movementId]) {
-    playerState[movementId].paused = !playerState[movementId].paused;
-    renderMovementFeed();
-  }
-}
-
-function toggleSpeedAnimation(movementId) {
-  if (playerState[movementId]) {
-    playerState[movementId].speed = playerState[movementId].speed === 1.0 ? 0.5 : 1.0;
-    renderMovementFeed();
-  }
-}
-
 function resetFilters() {
   currentRegion = "all";
   currentPlane = "all";
@@ -608,7 +570,7 @@ function resetFilters() {
 }
 
 // -----------------------------------------------------------------------------
-// 6. Modal de Ficha Muscular Completa y Revisada
+// 6. Modal de Ficha Muscular Completa y Revisada (Unificado)
 // -----------------------------------------------------------------------------
 function openMuscleModal(movementId, muscleId) {
   const movement = ANATOMY_DATABASE.movements.find(m => m.id === movementId);
@@ -621,7 +583,6 @@ function openMuscleModal(movementId, muscleId) {
   const modalContent = document.getElementById("modalContent");
   if (!modal || !modalContent) return;
 
-  // Render modal con reproductor de animación y datos anatómicos completos
   modalContent.innerHTML = `
     <!-- Modal Header -->
     <div class="p-4 border-b border-[#262626] flex items-start justify-between bg-[#18181b]">
@@ -647,16 +608,16 @@ function openMuscleModal(movementId, muscleId) {
     <!-- Modal Body -->
     <div class="p-4 space-y-3.5 max-h-[75vh] overflow-y-auto">
       
-      <!-- Mini Reproductor Biomecánico del Músculo en Bucle -->
+      <!-- Reproductor Biomecánico Unificado del Músculo en Bucle -->
       <div class="rounded-xl overflow-hidden border border-[#262626] bg-black">
         <div class="px-3 py-1.5 bg-[#18181b] border-b border-[#262626] flex items-center justify-between">
           <span class="text-[10px] font-mono font-bold text-accent flex items-center gap-1">
             <span class="material-symbols-outlined text-[13px]">play_circle</span>
-            Cinemática Biomecánica en Bucle (60 FPS)
+            Acción Biomecánica en Bucle (60 FPS)
           </span>
           <span class="text-[9px] font-mono text-neutral-400">Plano ${movement.plane}</span>
         </div>
-        ${generateBiomechanicalSvg(movement.animationType, muscle.name)}
+        ${renderUnifiedMotionPlayer(movement)}
       </div>
 
       <!-- Punto de Origen Anatómico Detallado (Requisito Explícito) -->
@@ -813,7 +774,7 @@ function renderFlashcard() {
         <p class="text-xs text-neutral-400 mb-4">${movement.joint}</p>
         
         <div class="p-4 rounded-xl bg-black/60 border border-[#262626] text-xs text-neutral-300">
-          ¿En qué <strong>plano anatómico</strong> actúa y cuáles son los <strong>músculos participantes con sus orígenes e inserciones</strong>?
+          ¿En qué <strong>plano anatómico</strong> actúa y cuáles son los <strong>motores primarios, secundarios y sus orígenes</strong>?
         </div>
       </div>
 
@@ -840,7 +801,7 @@ function renderFlashcard() {
             <div class="p-2.5 rounded-lg bg-black/50 border border-[#262626] text-left">
               <div class="flex items-center justify-between mb-0.5">
                 <span class="text-xs font-bold text-white">${m.name}</span>
-                <span class="text-[9px] font-mono text-accent uppercase">${m.role}</span>
+                <span class="text-[9px] font-mono text-accent uppercase font-bold">${m.role}</span>
               </div>
               <p class="text-[11px] text-neutral-200 mt-1"><strong>Origen:</strong> ${m.origin}</p>
               <p class="text-[11px] text-amber-300 mt-0.5"><strong>Inserción:</strong> ${m.insertion}</p>
