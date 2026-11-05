@@ -1,6 +1,6 @@
 # KineFlash PRO - Guía Anatómica y Biomecánica Rápida ⚡
 
-Aplicación web diseñada específicamente para **estudiantes de Fisioterapia de segundo semestre en adelante**. Resuelve al instante dudas sobre movimientos articulares, músculos participantes, puntos de origen anatómico, inserciones óseas y planos biomecánicos con **animaciones y videos en bucle**.
+Aplicación web diseñada específicamente para **estudiantes de Fisioterapia de segundo semestre en adelante**. Resuelve al instante dudas sobre movimientos articulares analíticos, **actividades de la vida diaria (AVD)**, músculos participantes (agónicos, sinergistas y fijadores/estabilizadores), puntos de origen anatómico, inserciones óseas y planos biomecánicos con **animaciones y videos en bucle a 60 FPS**.
 
 ---
 
@@ -12,30 +12,36 @@ Aplicación web diseñada específicamente para **estudiantes de Fisioterapia de
 
 ## 🎯 Funcionalidades Principales (PRD + Actualizaciones Clínicas)
 
-1. **Revisión Anatómica Completa y Exhaustiva:**
-   - Información clínica detallada de **origen anatómico exacto** e **inserción ósea** para todos los músculos de la aplicación.
-   - Detalle pormenorizado del **músculo deltoides con sus tres cabezas**:
-     - *Porción clavicular (anterior)*
-     - *Porción acromial (media)*
-     - *Porción espinal (posterior)*
+1. **Nueva Categoría: Actividades de la Vida Diaria (AVD):**
+   - Incorpora patrones motores funcionales complejos y multarticulares de la vida cotidiana:
+     1. **Agacharse a recoger un objeto del suelo (Patrón de Sentadilla / Squat)**: Triple flexión/extensión en cadena cerrada, bisagra de cadera (*hip hinge*) y control de valgo dinámico.
+     2. **Alcanzar un objeto en un estante alto (Alcance Sobre la Cabeza / Overhead Reach)**: Ritmo escápulo-humeral 2:1, rotación superior de escápula y centrado glenohumeral.
+     3. **Empujar una puerta pesada (Patrón de Empuje Horizontal / Push)**: Cadena cinética desde el suelo en zancada, aducción horizontal y estabilización antirretroceso del Core.
+     4. **Subir escaleras (Ascenso en Carga Unipodal / Step-Up)**: Carga monopodal de 2.5 a 3 veces el peso corporal, extensión concéntrica de rodilla/cadera y fijación frontal pélvica anti-Trendelenburg.
+     5. **Rotación de tronco al girarse para mirar atrás o tomar algo (Giro Axial del Raquis / Torso Twist)**: Par de fuerzas cruzado oblicuo interno/externo, rotación torácica y protección discal lumbar por el transverso abdominal.
+
+2. **Filtros y Etiquetas Especiales de 'Vida Diaria':**
+   - Pestaña / filtro dedicado **`🏃 Vida Diaria (AVD)`** con conmutador instantáneo entre *Todos*, *Vida Diaria* y *Analíticos*.
+   - Burbuja con gradiente exclusivo en las **Historias Superiores** de Instagram.
+   - Distintivo visual dorado/ámbar en cada tarjeta con desglose de **Acción Cotidiana**, **Articulaciones y Cinemática Involucradas**, y **Músculos Fijadores / Estabilizadores**.
+
+3. **Clasificación Muscular Completa:**
+   - **Motores Primarios (Agonistas Principales)**: Generan el torque motor fundamental.
+   - **Motores Secundarios y Sinergistas**: Coadyuvan en la dirección, coaptación y despegue.
+   - **Músculos Fijadores / Estabilizadores**: Manguito rotador, Core profundo (Transverso y Multífidos), Erectores espinales y Glúteo medio (antivalgo y anti-Trendelenburg).
+
+4. **Revisión Anatómica Completa y Exhaustiva:**
+   - Origen anatómico exacto e inserción ósea para todos los músculos.
+   - Detalle del **Deltoides con sus tres cabezas** (*clavicular, acromial y espinal*).
    - Cuádriceps desglosado con sus 4 cabezas (*Recto femoral, Vasto medial/VMO, Vasto lateral y Vasto intermedio*).
-   - Inervación con niveles radiculares específicos (*ej. C5-C6, L2-L4, S1-S2*).
+   - Isquiotibiales (*Bíceps femoral cabezas larga y corta, Semitendinoso y Semimembranoso*).
+   - Complejo de tobillo y pantorrilla (*Tibial anterior, Gastrocnemios, Sóleo, Tibial posterior y Extensores/Flexores*).
 
-2. **Soporte de Video/GIFs y Cinemática en Bucle (60 FPS):**
-   - Cada movimiento y ficha muscular cuenta con un **reproductor biomecánico dinámico**.
-   - Muestra el hueso fijo, el eje articular, la palanca ósea en movimiento y el vientre muscular en contracción activa y resaltado luminoso.
-   - Selector interactivo entre **Loop 60fps** y **Video / GIF Clínico**.
-   - Controles de reproducción con **Pausa** y **Cámara Lenta (0.5x)** para estudiar el reclutamiento muscular en detalle.
+5. **Loop Biomecánico Unificado a 60 FPS:**
+   - Cada movimiento cuenta con su propio reproductor biomecánico con los vectores y músculos resaltados en contracción activa y botón de pausa integrado.
 
-3. **Buscador ágil en tiempo real:**
-   - Búsqueda por término cotidiano o técnico (*"deltoides", "codo", "isquiotibiales", "doblar brazo"*).
-   - Filtros instantáneos por región anatómica (*Historias de Instagram*) y por planos (*Sagital, Frontal, Transversal*).
-
-4. **Ficha Muscular Instantánea al tacto:**
-   - Al tocar cualquier músculo, se despliega una ficha con Origen, Inserción, Función, Inervación y Perla Clínica de examen.
-
-5. **Modo Repaso Flashcards 3D:**
-   - Tarjetas interactivas para auto-evaluación rápida antes de parciales o laboratorios prácticos.
+6. **Modo Repaso Flashcards 3D:**
+   - Tarjetas interactivas de autoevaluación rápida para movimientos analíticos y patrones AVD.
 
 ---
 

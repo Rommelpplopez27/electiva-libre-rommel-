@@ -66,6 +66,9 @@
     .story-ring-cyan {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
     }
+    .story-ring-avd {
+      background: linear-gradient(135deg, #f59e0b 0%, #10b981 100%);
+    }
     body {
       min-height: max(884px, 100dvh);
       -webkit-tap-highlight-color: transparent;
@@ -78,6 +81,7 @@
     /* =========================================================================
        ANIMACIONES BIOMECÁNICAS VECTORIALES EN BUCLE (SVG MOTION LOOPS)
        ========================================================================= */
+    /* Movimientos Analíticos Base */
     @keyframes anim-elbow-flexion {
       0%, 100% { transform: rotate(0deg); }
       50% { transform: rotate(-100deg); }
@@ -117,6 +121,29 @@
     @keyframes anim-ankle-plantarflexion {
       0%, 100% { transform: rotate(0deg); }
       50% { transform: rotate(40deg); }
+    }
+
+    /* Nuevas Animaciones: Actividades de la Vida Diaria (AVD) */
+    @keyframes anim-daily-squat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(28px); }
+    }
+    @keyframes anim-daily-shelf-reach {
+      0%, 100% { transform: rotate(0deg) translateY(0px); }
+      50% { transform: rotate(-65deg) translateY(-6px); }
+    }
+    @keyframes anim-daily-door-push {
+      0%, 100% { transform: translateX(0px); }
+      50% { transform: translateX(22px); }
+    }
+    @keyframes anim-daily-stairs-climb {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-24px); }
+    }
+    @keyframes anim-daily-trunk-rotation {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(24deg); }
+      75% { transform: rotate(-24deg); }
     }
 
     /* Pulso de vientre muscular y puntos de origen */
@@ -170,6 +197,28 @@
       transform-origin: 160px 125px;
     }
 
+    /* Clases de animación AVD */
+    .motion-loop-daily-squat {
+      animation: anim-daily-squat 3.2s ease-in-out infinite;
+      transform-origin: 160px 150px;
+    }
+    .motion-loop-daily-shelf-reach {
+      animation: anim-daily-shelf-reach 3s ease-in-out infinite;
+      transform-origin: 135px 85px;
+    }
+    .motion-loop-daily-door-push {
+      animation: anim-daily-door-push 2.8s ease-in-out infinite;
+      transform-origin: 100px 100px;
+    }
+    .motion-loop-daily-stairs-climb {
+      animation: anim-daily-stairs-climb 3s ease-in-out infinite;
+      transform-origin: 160px 160px;
+    }
+    .motion-loop-daily-trunk-rotation {
+      animation: anim-daily-trunk-rotation 3.2s ease-in-out infinite;
+      transform-origin: 160px 90px;
+    }
+
     .muscle-contract {
       animation: muscle-pump 2.6s ease-in-out infinite;
     }
@@ -202,7 +251,7 @@
       <div class="flex items-center gap-2">
         <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-surface-card border border-ig-border text-accent flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          Modo Biomecánico
+          Clínica & AVD
         </span>
       </div>
     </header>
@@ -212,10 +261,10 @@
     <!-- ========================================== -->
     <div id="explorerView" class="w-full flex-1 flex flex-col">
 
-      <!-- Historias de Articulaciones (Instagram-style Carousel) -->
+      <!-- Historias de Articulaciones y AVD (Instagram-style Carousel) -->
       <section class="w-full pt-3 pb-2.5 border-b border-ig-border bg-[#0a0a0a]">
         <div class="px-4 mb-1.5 flex items-center justify-between">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">Articulación / Región</span>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-500 font-bold">Explorador Anatómico & AVD</span>
           <span class="text-[10px] text-accent font-mono cursor-pointer hover:underline" onclick="selectRegion('all')">Ver todas</span>
         </div>
         <div id="storiesContainer" class="flex items-center gap-3.5 px-4 overflow-x-auto no-scrollbar">
@@ -233,7 +282,7 @@
             <input 
               id="searchInput"
               class="w-full pl-10 pr-10 py-2.5 bg-[#121212] text-white text-sm rounded-xl border border-ig-border focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all placeholder:text-ig-subtext" 
-              placeholder="Buscar (ej. deltoides, codo, rodilla, psoas)..." 
+              placeholder="Buscar (ej. sentadilla, alcanzar estante, codo, psoas)..." 
               type="text"
             />
             <button id="clearSearchBtn" class="hidden absolute right-3 p-1 text-neutral-400 hover:text-white" title="Limpiar búsqueda">
@@ -242,7 +291,14 @@
           </div>
         </section>
 
-        <!-- Filtros de Planos Anatómicos (Sagital, Frontal, Transversal) -->
+        <!-- Filtros de Categoría: Todos / Vida Diaria (AVD) / Analíticos -->
+        <section class="w-full">
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="categoryFiltersContainer">
+            <!-- Dynamic Category Buttons Loaded by JS -->
+          </div>
+        </section>
+
+        <!-- Filtros de Planos Anatómicos (Sagital, Frontal, Transversal, Multiplanar) -->
         <section class="w-full">
           <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="planeFiltersContainer">
             <!-- Dynamic Plane Buttons Loaded by JS -->
@@ -256,10 +312,10 @@
               <span>Movimientos con Cinemática Activa</span>
               <span class="material-symbols-outlined text-accent text-sm fill-icon">verified</span>
             </h2>
-            <p class="text-[11px] text-ig-muted">Toca un músculo para ver origen, inserción y cinemática</p>
+            <p class="text-[11px] text-ig-muted">Toca un músculo para ver origen, inserción y rol (Agónico / Fijador)</p>
           </div>
           <span id="movementCountIndicator" class="text-[10px] font-mono text-ig-muted bg-surface-card px-2.5 py-1 rounded-full border border-ig-border">
-            10 movimientos
+            15 movimientos
           </span>
         </div>
 
@@ -280,7 +336,7 @@
             <span class="material-symbols-outlined text-accent">style</span>
             Modo Repaso Rápido
           </h2>
-          <p class="text-xs text-neutral-400">Ponte a prueba antes de tu parcial o práctica</p>
+          <p class="text-xs text-neutral-400">Ponte a prueba con movimientos analíticos y AVDs</p>
         </div>
         <div class="flex items-center gap-1 bg-[#18181b] px-2.5 py-1 rounded-full border border-[#262626]">
           <span class="material-symbols-outlined text-xs text-amber-400 fill-icon">local_fire_department</span>
@@ -289,7 +345,7 @@
       </div>
 
       <div class="text-[11px] font-mono text-neutral-400 mb-2 flex justify-between">
-        <span id="flashcardProgress">Tarjeta 1 de 10</span>
+        <span id="flashcardProgress">Tarjeta 1 de 15</span>
         <span class="text-accent">Auto-evaluación</span>
       </div>
 
@@ -306,30 +362,34 @@
       <div class="p-4 bg-[#121212] border border-[#262626] rounded-2xl">
         <h2 class="text-base font-bold text-white flex items-center gap-2 mb-2">
           <span class="material-symbols-outlined text-accent">medical_services</span>
-          KineFlash PRO - Guía Anatómica
+          KineFlash PRO - Guía Anatómica & AVD
         </h2>
         <p class="text-xs text-neutral-300 leading-relaxed mb-3">
           Herramienta de consulta rápida y cinemática diseñada específicamente para estudiantes de Fisioterapia de segundo semestre en adelante.
         </p>
         <div class="space-y-2 text-xs">
           <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
+            <strong class="text-amber-400 block mb-0.5">🏃 Nueva Categoría: Vida Diaria (AVD):</strong>
+            Patrones motores reales de la vida cotidiana (sentadilla/recoger objetos, alcanzar estantes altos, empujar puertas, subir escaleras y rotación de tronco) con sus articulaciones y fijadores estabilizadores de Core y pelvis.
+          </div>
+          <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
             <strong class="text-accent block mb-0.5">🎯 Músculos y Movimientos Verificados:</strong>
-            Revisión anatómica detallada de origen e inserción ósea, inervación radicular y acciones musculares (incluyendo las 3 porciones del Deltoides y el Cuádriceps completo).
+            Revisión anatómica detallada de origen e inserción ósea, inervación radicular y acciones musculares (incluyendo las 3 cabezas del Deltoides y el Cuádriceps completo).
           </div>
           <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
-            <strong class="text-emerald-400 block mb-0.5">🎬 Soporte de Animación y Loops Biomecánicos:</strong>
-            Simulación interactiva a 60fps con músculo en contracción resaltado y control de velocidad en cámara lenta (0.5x).
+            <strong class="text-emerald-400 block mb-0.5">🎬 Loop Biomecánico Unificado a 60 FPS:</strong>
+            Un solo reproductor por movimiento con animación continua, contracción muscular y controles de pausa.
           </div>
           <div class="p-2.5 bg-black/50 rounded-xl border border-neutral-800">
-            <strong class="text-amber-400 block mb-0.5">⚡ Sin registro ni barreras:</strong>
-            100% inmediato para consultas ágiles en laboratorios anatómicos y rotaciones clínicas.
+            <strong class="text-cyan-400 block mb-0.5">⚡ Sin registro ni barreras:</strong>
+            Acceso 100% inmediato para consultas ágiles en laboratorios anatómicos, prácticas de biomecánica y rotaciones clínicas.
           </div>
         </div>
       </div>
 
       <div class="p-4 bg-[#121212] border border-[#262626] rounded-2xl text-center">
         <span class="text-[11px] font-mono text-neutral-500 block mb-1">Electiva Libre • Rommel López</span>
-        <span class="text-xs text-neutral-400">Versión 1.2 Pro • Cinemática y Loops (Octubre 2026)</span>
+        <span class="text-xs text-neutral-400">Versión 2.0 Pro • Módulos AVD & Cinemática (Noviembre 2026)</span>
       </div>
     </div>
 

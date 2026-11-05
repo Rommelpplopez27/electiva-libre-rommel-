@@ -1,12 +1,14 @@
 // =============================================================================
 // KineFlash PRO - Base de Datos Anatómica y Biomecánica Completa
-// Revisada según Latarjet-Ruiz Liard, Rouvière y Moore
-// Motores Primarios, Motores Secundarios y Sinergistas Exhaustivos
+// Revisada según Latarjet-Ruiz Liard, Rouvière, Kapandji y Moore
+// Movimientos Analíticos y Actividades de la Vida Diaria (AVD)
+// Motores Primarios, Secundarios, Sinergistas y Fijadores / Estabilizadores
 // =============================================================================
 
 const ANATOMY_DATABASE = {
   regions: [
     { id: "all", name: "Todas", icon: "all_inclusive", color: "cyan" },
+    { id: "vida-diaria", name: "Vida Diaria", icon: "routine", color: "active" },
     { id: "codo", name: "Codo", icon: "sports_handball", color: "active" },
     { id: "hombro", name: "Hombro", icon: "accessibility", color: "active" },
     { id: "rodilla", name: "Rodilla", icon: "snowshoeing", color: "active" },
@@ -14,19 +16,565 @@ const ANATOMY_DATABASE = {
     { id: "tobillo", name: "Tobillo", icon: "footprint", color: "active" }
   ],
 
+  categories: [
+    { id: "all", name: "Todos", icon: "apps" },
+    { id: "vida-diaria", name: "Vida Diaria (AVD)", icon: "routine" },
+    { id: "analitico", name: "Analíticos", icon: "biotech" }
+  ],
+
   planes: [
     { id: "all", name: "Todos los planos" },
     { id: "Sagital", name: "Plano Sagital" },
     { id: "Frontal", name: "Plano Frontal" },
-    { id: "Transversal", name: "Plano Transversal" }
+    { id: "Transversal", name: "Plano Transversal" },
+    { id: "Multiplanar", name: "Multiplanar / Funcional" }
   ],
 
   movements: [
     // =========================================================================
-    // 1. FLEXIÓN DE CODO
+    // --- CATEGORÍA 1: ACTIVIDADES DE LA VIDA DIARIA (AVD) ---
     // =========================================================================
+
+    // -------------------------------------------------------------------------
+    // AVD 1: AGACHARSE A COGER UN OBJETO / SENTADILLA FUNCIONAL (SQUAT)
+    // -------------------------------------------------------------------------
+    {
+      id: "sentadilla-agacharse",
+      category: "vida-diaria",
+      name: "Agacharse a recoger un objeto (Patrón de Sentadilla / Squat)",
+      region: "vida-diaria",
+      regionLabel: "Vida Diaria (AVD) • Cadena Cinética Cerrada",
+      code: "AVD-01",
+      dailyAction: "Descenso y ascenso del centro de gravedad flexionando caderas y rodillas manteniendo el tronco erguido para tomar un objeto del suelo sin dañar la columna.",
+      joint: "Complejo Multarticular: Art. Coxofemorales, Tibiofemorales, Patelofemorales, Talocrurales y Raquis Lumbotorácico",
+      jointType: "Enartrosis (Caderas), Bicondíleas con meniscos (Rodillas), Gínglimo (Tobillos) y Anfiartrosis/Artrodias (Raquis)",
+      plane: "Sagital",
+      axis: "Ejes Laterolaterales articulares sincrónicos",
+      rom: "Cadera: 0°-105° flexión | Rodilla: 0°-110° flexión | Tobillo: 0°-25° dorsiflexión",
+      description: "Patrón motor fundamental de triple flexión en fase de descenso excéntrico y triple extensión en fase de elevación concéntrica. Exige neutralidad lumbar estricta.",
+      lever: "3er Género en rodilla y cadera; 1er Género en raquis (músculos erectores contrapesando el peso anterior)",
+      animationType: "daily-squat",
+      highlightedMuscle: "Glúteo Mayor, Cuádriceps y Erectores Espinales (Fijadores)",
+      searchTerms: ["agacharse", "coger objeto", "sentadilla", "squat", "levantar carga", "vida diaria", "avd", "suelo", "core"],
+      primaryMuscle: "Glúteo mayor y Cuádriceps femoral",
+      synergistMuscles: ["Isquiotibiales (co-contracción protectora de rodilla)", "Sóleo", "Aductor mayor"],
+      stabilizers: "Erector de la columna, Transverso del abdomen, Multífidos y Glúteo medio (previene valgo dinámico)",
+      muscles: [
+        {
+          id: "gluteo-mayor-squat",
+          name: "Glúteo Mayor (Gluteus Maximus)",
+          scientificName: "Musculus gluteus maximus",
+          role: "Motor Primario Agónico",
+          roleType: "primary",
+          compartment: "Región Glútea (Plano Superficial Posterior)",
+          origin: "Línea glútea posterior del ilion, cara dorsal del sacro y coxis, ligamento sacrotuberoso y aponeurosis toracolumbar.",
+          insertion: "Tuberosidad glútea del fémur y tracto iliotibial de la fascia lata.",
+          innervation: "Nervio Glúteo Inferior (L5, S1, S2).",
+          action: "Potente motor extensor concéntrico de la cadera en el ascenso de la sentadilla; frena la flexión en fase excéntrica.",
+          clinicalNote: "Al agacharse con bisagra de cadera (hip hinge), el glúteo mayor asume la mayor demanda mecánica, protegiendo las vértebras lumbares."
+        },
+        {
+          id: "cuadriceps-squat",
+          name: "Cuádriceps Femoral (Vastos Medial, Lateral, Intermedio y Recto)",
+          scientificName: "Musculus quadriceps femoris",
+          role: "Motor Primario Agónico",
+          roleType: "primary",
+          compartment: "Compartimento Femoral Anterior",
+          origin: "Recto femoral en espina ilíaca anteroinferior; vastos en fémur (línea áspera, trocánter mayor y diáfisis femoral).",
+          insertion: "Base y bordes de la rótula, continuándose por el ligamento rotuliano en la tuberosidad anterior de la tibia.",
+          innervation: "Nervio Femoral / Crural (L2, L3, L4).",
+          action: "Controla excéntricamente la bajada evitando el desplome del cuerpo y genera la extensión concéntrica potente al levantarse.",
+          clinicalNote: "El vasto medial oblicuo (VMO) asegura el tracking rotuliano adecuado dentro de la tróclea durante la carga."
+        },
+        {
+          id: "isquiotibiales-squat",
+          name: "Músculos Isquiotibiales (Bíceps Femoral, Semitendinoso, Semimembranoso)",
+          scientificName: "Musculi ischiocrurales",
+          role: "Sinergista Agonista y Coaptador Protector",
+          roleType: "synergist",
+          compartment: "Compartimento Femoral Posterior",
+          origin: "Tuberosidad isquiática de la pelvis (y labio lateral de línea áspera para cabeza corta del bíceps).",
+          insertion: "Cabeza del peroné y cóndilos medial/lateral de la tibia.",
+          innervation: "Nervio Ciático (L5, S1, S2).",
+          action: "Coadyuvan en la extensión de cadera y generan co-contracción sinérgica en la rodilla, reduciendo la tensión sobre el Ligamento Cruzado Anterior (LCA).",
+          clinicalNote: "La coactivación cuádriceps-isquiotibiales es el mecanismo biomecánico que estabiliza la rodilla en cadena cinética cerrada."
+        },
+        {
+          id: "soleo-squat",
+          name: "Sóleo",
+          scientificName: "Musculus soleus",
+          role: "Sinergista de Control Tibial",
+          roleType: "synergist",
+          compartment: "Compartimento Posterior de la Pierna",
+          origin: "Cara posterior de la cabeza del peroné y línea del sóleo en la tibia.",
+          insertion: "Cara posterior del hueso calcáneo mediante el tendón común de Aquiles.",
+          innervation: "Nervio Tibial (S1, S2).",
+          action: "Frena la traslación anterior de la tibia (control excéntrico de la dorsiflexión) impidiendo que el peso venza hacia adelante.",
+          clinicalNote: "Una retracción del sóleo limita la dorsiflexión del tobillo y obliga al estudiante o paciente a despegar los talones del suelo al agacharse."
+        },
+        {
+          id: "erectores-squat",
+          name: "Músculos Erectores de la Columna (Iliocostal, Longísimo, Espinoso)",
+          scientificName: "Musculus erector spinae",
+          role: "Fijador / Estabilizador Raquídeo Crítico",
+          roleType: "stabilizer",
+          compartment: "Región Dorsal y Lumbar Profunda (Músculos Autóctonos)",
+          origin: "Cresta ilíaca posterior, cara dorsal del sacro y apófisis espinosas lumbosacras.",
+          insertion: "Ángulos de las costillas y apófisis transversas/espinosas torácicas y cervicales.",
+          innervation: "Ramos dorsales de los nervios espinales correspondientes.",
+          action: "Contracción isométrica intensa que mantiene la columna vertebral neutra, contrarrestando el momento flector anterior del tronco.",
+          clinicalNote: "Si los erectores claudican y la columna se curva en cifosis durante el levantamiento, el estrés de cizallamiento en los discos L5-S1 se multiplica por 5."
+        },
+        {
+          id: "transverso-multifidos-squat",
+          name: "Core Profundo (Transverso del Abdomen y Multífidos)",
+          scientificName: "Musculus transversus abdominis et multifidi",
+          role: "Fijador de Presión Intraabdominal (Faja Lumbar)",
+          roleType: "stabilizer",
+          compartment: "Pared Abdominal Profunda y Surco Vertebral",
+          origin: "Fascia toracolumbar, cresta ilíaca interna y cartílagos costales inferiores (transverso); apófisis mamilares y transversas (multífidos).",
+          insertion: "Línea alba y aponeurosis abdominal (transverso); apófisis espinosas de 2-4 vértebras superiores (multífidos).",
+          innervation: "Nervios Intercostales (T7-T11), Subcostal (T12), Iliohipogástrico (L1) y ramos dorsales.",
+          action: "Generan el mecanismo de 'cilindro hidráulico' aumentando la presión intraabdominal para descargar las carillas articulares lumbares.",
+          clinicalNote: "Es el cinturón de fuerza anatómico que se activa de forma anticipatoria antes de mover los brazos o agacharse."
+        },
+        {
+          id: "gluteo-medio-squat",
+          name: "Glúteo Medio (Fibras Posteriores)",
+          scientificName: "Musculus gluteus medius",
+          role: "Fijador Frontal Antivalgo",
+          roleType: "stabilizer",
+          compartment: "Región Glútea Lateral",
+          origin: "Cara glútea externa del hueso ilion entre las líneas glúteas anterior y posterior.",
+          insertion: "Cara lateral del trocánter mayor del fémur.",
+          innervation: "Nervio Glúteo Superior (L4, L5, S1).",
+          action: "Mantiene el fémur alineado en el plano frontal y rota externamente la cadera, impidiendo el colapso de las rodillas hacia adentro (valgo dinámico).",
+          clinicalNote: "El valgo dinámico de rodilla al agacharse es el principal factor de riesgo en fisioterapia para síndrome patelofemoral y rotura del LCA."
+        }
+      ]
+    },
+
+    // -------------------------------------------------------------------------
+    // AVD 2: ALCANZAR UN OBJETO EN UN ESTANTE ALTO (OVERHEAD REACH)
+    // -------------------------------------------------------------------------
+    {
+      id: "alcanzar-estante-alto",
+      category: "vida-diaria",
+      name: "Alcanzar un objeto en un estante alto (Alcance Sobre la Cabeza)",
+      region: "vida-diaria",
+      regionLabel: "Vida Diaria (AVD) • Cintura Escapular y Tronco",
+      code: "AVD-02",
+      dailyAction: "Elevación del brazo por encima de 120°-180° coordinada con rotación hacia arriba de la escápula y extensión torácica para alcanzar un libro, caja o vaso en una repisa superior.",
+      joint: "Complejo del Hombro (Glenohumeral, Escapulotorácica, Esternoclavicular, Acromioclavicular), Codo y Columna Torácica",
+      jointType: "Enartrosis (Hombro), Sinsarcosis (Escapulotorácica), Encamado/Silla de montar (Esternoclavicular) y Artrodia (Acromioclavicular)",
+      plane: "Multiplanar",
+      axis: "Plano Escapular (30° anterior al coronal) y extensión torácica",
+      rom: "Elevación global: 0° — 180° | Rotación escapular: 60° | Extensión codo: 0°",
+      description: "Movimiento funcional que depende del Ritmo Escápulo-Humeral (2:1). Por cada 2° de elevación del húmero, la escápula debe rotar 1° hacia arriba para liberar el espacio subacromial.",
+      lever: "3er Género en hombro y codo",
+      animationType: "daily-shelf-reach",
+      highlightedMuscle: "Deltoides, Serrato Anterior y Manguito Rotador (Fijador)",
+      searchTerms: ["alcanzar estante", "estante alto", "subir brazo", "repisa", "caja alta", "overhead reach", "vida diaria", "avd", "hombro"],
+      primaryMuscle: "Deltoides (Porciones Clavicular y Acromial) y Serrato anterior",
+      synergistMuscles: ["Trapecio (Fibras Superiores e Inferiores)", "Coracobraquial", "Tríceps braquial", "Pectoral mayor clavicular"],
+      stabilizers: "Manguito de los Rotadores (Supraespinoso, Infraespinoso, Redondo menor, Subescapular) y Erectores Torácicos",
+      muscles: [
+        {
+          id: "deltoides-reach",
+          name: "Deltoides (Porciones Clavicular y Acromial)",
+          scientificName: "Musculus deltoideus",
+          role: "Motor Primario Agónico",
+          roleType: "primary",
+          compartment: "Hombro • Capa Muscular Externa",
+          origin: "Tercio lateral de la clavícula y acromion de la escápula.",
+          insertion: "Tuberosidad deltoidea del húmero (V deltoidea).",
+          innervation: "Nervio Axilar / Circunflejo (C5, C6).",
+          action: "Eleva el brazo en flexión anterior y abducción funcional en el plano de la escápula.",
+          clinicalNote: "Sin el trabajo compensador del manguito rotador, la fuerza ascendente del deltoides chocaría el troquíter contra el acromion."
+        },
+        {
+          id: "serrato-anterior-reach",
+          name: "Serrato Anterior (Serrato Mayor)",
+          scientificName: "Musculus serratus anterior",
+          role: "Motor Primario Escapulotorácico",
+          roleType: "primary",
+          compartment: "Pared Lateral del Tórax",
+          origin: "Caras laterales de las costillas 1ª a 9ª mediante digitaciones carnosas.",
+          insertion: "Cara anterior del borde medial de la escápula (desde ángulo superior al inferior).",
+          innervation: "Nervio Torácico Largo (C5, C6, C7).",
+          action: "Genera la báscula axilar / rotación superior de la escápula (orientando la cavidad glenoidea hacia el techo) y fija la escápula al tórax.",
+          clinicalNote: "Si el serrato se debilita, el paciente no puede levantar el brazo más allá de los 90° y compensa inclinando todo el tronco."
+        },
+        {
+          id: "trapecio-reach",
+          name: "Trapecio (Fibras Superiores e Inferiores)",
+          scientificName: "Musculus trapezius",
+          role: "Sinergista en Par de Fuerzas Escapular",
+          roleType: "synergist",
+          compartment: "Región Posterior del Cuello y Tronco",
+          origin: "Línea nucal superior, protuberancia occipital externa, ligamento nucal y apófisis espinosas de C7 a T12.",
+          insertion: "Tercio lateral de la clavícula, acromion y espina de la escápula.",
+          innervation: "Nervio Accesorio (Espinal / XI par craneal) y ramos del plexo cervical (C3, C4).",
+          action: "Las fibras superiores tiran de la clavícula hacia arriba y las inferiores tiran de la espina hacia abajo, rotando la glena en sinergia con el serrato.",
+          clinicalNote: "El balance entre trapecio y serrato es clave para prevenir el síndrome de pinzamiento del hombro en estudiantes y trabajadores."
+        },
+        {
+          id: "triceps-reach",
+          name: "Tríceps Braquial",
+          scientificName: "Musculus triceps brachii",
+          role: "Sinergista Extensor Terminal de Codo",
+          roleType: "synergist",
+          compartment: "Compartimento Braquial Posterior",
+          origin: "Tubérculo infraglenoideo de la escápula (cabeza larga) y cara posterior del húmero (cabezas lateral y medial).",
+          insertion: "Olécranon del cúbito.",
+          innervation: "Nervio Radial (C6, C7, C8).",
+          action: "Extiende el codo para extender el radio de acción y posibilitar que la mano alcance la profundidad del estante.",
+          clinicalNote: "Permite fijar la distancia brazo-objeto sin doblar el codo de forma inestable."
+        },
+        {
+          id: "manguito-rotador-reach",
+          name: "Manguito de los Rotadores (Supraespinoso, Infraespinoso, Redondo Menor, Subescapular)",
+          scientificName: "Musculi rotatores humeri",
+          role: "Fijador y Centrador Glenohumeral Vital",
+          roleType: "stabilizer",
+          compartment: "Hombro Profundo Periarticular",
+          origin: "Fosa supraespinosa, infraespinosa, borde lateral de la escápula y fosa subescapular.",
+          insertion: "Tubérculos mayor (troquíter) y menor (troquín) del húmero y cápsula articular.",
+          innervation: "Nervios Supraescapular, Axilar y Subescapular (C5, C6).",
+          action: "Deprimen activamente la cabeza humeral y la comprimen concéntricamente en el centro de la cavidad glenoidea.",
+          clinicalNote: "Su fallo genera bursitis subacromial y dolor punzante en 'arco doloroso' entre 60° y 120° de elevación al guardar cosas en alacenas."
+        },
+        {
+          id: "erectores-toracicos-reach",
+          name: "Erectores de la Columna Torácica y Core",
+          scientificName: "Musculi erectores spinae thoracis",
+          role: "Fijador Postural Axial",
+          roleType: "stabilizer",
+          compartment: "Espalda Media y Pared Abdominal",
+          origin: "Apófisis espinosas y transversas torácicas y arcos costales.",
+          insertion: "Vértebras torácicas superiores y costillas.",
+          innervation: "Ramos dorsales de los nervios espinales torácicos.",
+          action: "Aportan los últimos 10°-15° de extensión torácica indispensable para la verticalidad del brazo; el core evita la hiperextensión lumbar lesiva.",
+          clinicalNote: "Una cifosis torácica rígida (dorso curvo) bloquea mecánicamente la elevación del brazo impidiendo alcanzar objetos altos."
+        }
+      ]
+    },
+
+    // -------------------------------------------------------------------------
+    // AVD 3: EMPUJAR UNA PUERTA PESADA (PATRÓN DE EMPUJE HORIZONTAL)
+    // -------------------------------------------------------------------------
+    {
+      id: "empujar-puerta",
+      category: "vida-diaria",
+      name: "Empujar una puerta pesada (Patrón de Empuje Horizontal / Push)",
+      region: "vida-diaria",
+      regionLabel: "Vida Diaria (AVD) • Cadena Cinética y Miembro Superior",
+      code: "AVD-03",
+      dailyAction: "Aplicación de fuerza horizontal hacia adelante mediante la extensión coordinada de codos y brazos con postura en zancada para vencer la inercia de una puerta maciza.",
+      joint: "Glenohumeral, Escapulotorácica, Húmero-cubital, Radiocarpiana y Articulaciones de Miembros Inferiores en zancada",
+      jointType: "Enartrosis (Hombro), Gínglimo (Codo) y Condílea (Muñeca)",
+      plane: "Sagital y Transversal (Aducción horizontal)",
+      axis: "Eje Longitudinal vertical de aducción y laterolateral de flexión/extensión",
+      rom: "Aducción horizontal: 0°-90° | Extensión de codo: 90° a 0° | Bloqueo muñeca: 30°",
+      description: "Transmisión de fuerza en cadena cinética desde el suelo: los pies empujan contra el suelo, el core transfiere el vector y los miembros superiores lo aplican a la puerta.",
+      lever: "3er Género en hombro; 1er Género en codo",
+      animationType: "daily-door-push",
+      highlightedMuscle: "Pectoral Mayor, Tríceps Braquial y Core Torsional (Fijador)",
+      searchTerms: ["empujar puerta", "empuje", "abrir puerta pesada", "puerta", "push", "cadena cinetica", "vida diaria", "avd", "pectoral"],
+      primaryMuscle: "Pectoral mayor y Tríceps braquial",
+      synergistMuscles: ["Deltoides anterior", "Serrato anterior (protracción)", "Pectoral menor", "Tríceps sural posterior"],
+      stabilizers: "Core abdominal (frena retroceso del tronco), Manguito rotador y Flexores/Extensores de muñeca",
+      muscles: [
+        {
+          id: "pectoral-mayor-push",
+          name: "Pectoral Mayor (Porciones Esternocostal y Clavicular)",
+          scientificName: "Musculus pectoralis major",
+          role: "Motor Primario Agónico de Empuje",
+          roleType: "primary",
+          compartment: "Pared Torácica Anterior",
+          origin: "Mitad esternal de la clavícula, cara anterior del esternón y cartílagos costales 1º a 6º.",
+          insertion: "Cresta del tubérculo mayor del húmero (labio lateral del surco intertubercular).",
+          innervation: "Nervios Pectorales Medial y Lateral (C5, C6, C7, C8, T1).",
+          action: "Potente aducción horizontal y propulsión anterior del brazo en el plano horizontal contra la resistencia de la puerta.",
+          clinicalNote: "Es el motor principal de empuje frontal en toda la biomecánica clínica humana."
+        },
+        {
+          id: "triceps-push",
+          name: "Tríceps Braquial (Cabezas Lateral, Medial y Larga)",
+          scientificName: "Musculus triceps brachii",
+          role: "Motor Primario de Extensión",
+          roleType: "primary",
+          compartment: "Compartimento Braquial Posterior",
+          origin: "Tubérculo infraglenoideo (cabeza larga) y cara posterior del húmero por encima y debajo del surco radial (cabezas lateral y medial).",
+          insertion: "Cara superior y posterior del olécranon del cúbito.",
+          innervation: "Nervio Radial (C6, C7, C8).",
+          action: "Extiende con fuerza la articulación del codo empujando el punto de contacto hacia adelante.",
+          clinicalNote: "La cabeza medial actúa de forma continua, mientras que las cabezas lateral y larga se disparan al aumentar la masa de la puerta."
+        },
+        {
+          id: "deltoides-anterior-push",
+          name: "Deltoides (Porción Clavicular / Anterior)",
+          scientificName: "Musculus deltoideus (pars clavicularis)",
+          role: "Sinergista Agonista Anterior",
+          roleType: "synergist",
+          compartment: "Hombro Anterior",
+          origin: "Borde anterior y tercio lateral de la clavícula.",
+          insertion: "Tuberosidad deltoidea del húmero (V deltoidea).",
+          innervation: "Nervio Axilar (C5, C6).",
+          action: "Flexiona y aduce horizontalmente el húmero en sinergia directa con el pectoral mayor.",
+          clinicalNote: "Mantiene la altura del brazo frente al pecho durante toda la fase de empuje."
+        },
+        {
+          id: "serrato-anterior-push",
+          name: "Serrato Anterior (Músculo del Empuje / Boxeador)",
+          scientificName: "Musculus serratus anterior",
+          role: "Sinergista de Protracción Escapular",
+          roleType: "synergist",
+          compartment: "Pared Lateral del Tórax",
+          origin: "Caras laterales de las costillas 1ª a 9ª.",
+          insertion: "Borde medial anterior de la escápula.",
+          innervation: "Nervio Torácico Largo (C5, C6, C7).",
+          action: "Desplaza la escápula hacia adelante alrededor de la parrilla costal (protracción), sumando alcance y firmeza al empuje.",
+          clinicalNote: "Permite proyectar el muñón del hombro hacia adelante para maximizar el vector de contacto."
+        },
+        {
+          id: "core-push",
+          name: "Core Abdominal y Oblicuos (Fijador Antirretroceso)",
+          scientificName: "Musculi abdominis (rectus, obliquus externus et internus, transversus)",
+          role: "Fijador de Transferencia Cinética",
+          roleType: "stabilizer",
+          compartment: "Pared Abdominal Anterolateral",
+          origin: "Costillas 5ª a 12ª, cresta ilíaca y sínfisis púbica.",
+          insertion: "Línea alba, cresta púbica y cartílagos costales.",
+          innervation: "Nervios Intercostales (T7-T12) y Nervios Iliohipogástrico/Ilioinguinal.",
+          action: "Fija el tronco en isometría impidiendo que la fuerza reactiva de la puerta empuje el torso hacia atrás o desestabilice la pelvis.",
+          clinicalNote: "Sin un core firme, la fuerza de los brazos se disipa y la columna lumbar sufre hiperlordosis reactiva lesiva."
+        },
+        {
+          id: "antebrazo-muneca-push",
+          name: "Músculos Flexores y Extensores de Muñeca (Co-contracción)",
+          scientificName: "Musculi carpi flexores et extensores",
+          role: "Fijadores del Puente de Muñeca",
+          roleType: "stabilizer",
+          compartment: "Compartimentos Anterior y Posterior del Antebrazo",
+          origin: "Epicóndilo medial (epitróclea) y epicóndilo lateral del húmero.",
+          insertion: "Bases de los metacarpianos 2º, 3º y 5º y huesos del carpo.",
+          innervation: "Nervios Mediano, Cubital y Radial (C6, C7, C8).",
+          action: "Bloquean isométricamente la muñeca en 20°-30° de dorsiflexión neutra para transmitir el vector de fuerza a la palma sin que colapse.",
+          clinicalNote: "Protegen el ligamento transverso del carpo y evitan microtraumatismos del nervio mediano."
+        }
+      ]
+    },
+
+    // -------------------------------------------------------------------------
+    // AVD 4: SUBIR ESCALERAS (ASCENSO DE ESCALÓN / STAIR CLIMBING)
+    // -------------------------------------------------------------------------
+    {
+      id: "subir-escaleras",
+      category: "vida-diaria",
+      name: "Subir escaleras (Ascenso en Carga Unipodal / Step-Up)",
+      region: "vida-diaria",
+      regionLabel: "Vida Diaria (AVD) • Miembro Inferior y Pelvis",
+      code: "AVD-04",
+      dailyAction: "Propulsión del cuerpo hacia arriba y adelante apoyando un pie en el peldaño superior y venciendo toda la fuerza de gravedad en carga monopodal.",
+      joint: "Cadera, Rodilla y Tobillo de la pierna delantera (Carga) y Tobillo de pierna trasera (Despegue)",
+      jointType: "Enartrosis (Cadera), Bicondílea (Rodilla) y Gínglimo (Tobillo)",
+      plane: "Sagital dominante con estricto control Frontal de pelvis",
+      axis: "Ejes laterolaterales articulares y eje anteroposterior pélvico",
+      rom: "Rodilla: de 70°-90° de flexión a 0° | Cadera: de 60°-70° de flexión a 0°",
+      description: "Exige que una sola extremidad inferior soporte y eleve la totalidad del peso corporal más la inercia, mientras la cadera contralateral se mantiene estable en el aire.",
+      lever: "3er Género en rodilla y cadera; 2do Género en tobillo de empuje",
+      animationType: "daily-stairs-climb",
+      highlightedMuscle: "Cuádriceps, Glúteo Mayor y Glúteo Medio (Fijador Pélvico)",
+      searchTerms: ["subir escaleras", "escalon", "gradas", "subir gradas", "step up", "unipodal", "vida diaria", "avd", "rodilla", "cadera"],
+      primaryMuscle: "Cuádriceps femoral y Glúteo mayor",
+      synergistMuscles: ["Tríceps sural (Gastrocnemios y Sóleo)", "Isquiotibiales", "Aductor mayor"],
+      stabilizers: "Glúteo medio y menor (pilar de Trendelenburg), Cuadrado lumbar y Tibial anterior",
+      muscles: [
+        {
+          id: "cuadriceps-stairs",
+          name: "Cuádriceps Femoral (Vastos y Recto Femoral)",
+          scientificName: "Musculus quadriceps femoris",
+          role: "Motor Primario Propulsor",
+          roleType: "primary",
+          compartment: "Compartimento Femoral Anterior",
+          origin: "Fémur (vastos lateral, medial e intermedio) y espina ilíaca anteroinferior (recto femoral).",
+          insertion: "Rótula y tuberosidad tibial mediante el ligamento rotuliano.",
+          innervation: "Nervio Femoral (L2, L3, L4).",
+          action: "Extiende concéntricamente la rodilla soportando de 2.5 a 3 veces el peso corporal sobre la articulación femororrotuliana.",
+          clinicalNote: "Subir escaleras genera las mayores fuerzas de compresión patelofemoral de la vida diaria, desencadenando dolor en condromalacia rotuliana."
+        },
+        {
+          id: "gluteo-mayor-stairs",
+          name: "Glúteo Mayor",
+          scientificName: "Musculus gluteus maximus",
+          role: "Motor Primario Extensor de Cadera",
+          roleType: "primary",
+          compartment: "Región Glútea Posterior",
+          origin: "Ilion posterior, sacro, coxis y ligamento sacrotuberoso.",
+          insertion: "Tuberosidad glútea del fémur y cintilla iliotibial.",
+          innervation: "Nervio Glúteo Inferior (L5, S1, S2).",
+          action: "Extiende la cadera desde la posición flexionada impulsando la pelvis hacia arriba y hacia adelante sobre el peldaño.",
+          clinicalNote: "El glúteo mayor apenas se activa al caminar en llano, pero se recluta con máxima potencia al subir escaleras o cuestas pronunciadas."
+        },
+        {
+          id: "triceps-sural-stairs",
+          name: "Tríceps Sural (Gastrocnemios y Sóleo)",
+          scientificName: "Musculus triceps surae",
+          role: "Sinergista de Despegue y Estabilidad",
+          roleType: "synergist",
+          compartment: "Pantorrilla Posterior Superficial",
+          origin: "Cóndilos femorales medial y lateral (gemelos) y cabeza de peroné/tibia (sóleo).",
+          insertion: "Cara posterior del hueso calcáneo (Tendón de Aquiles).",
+          innervation: "Nervio Tibial (S1, S2).",
+          action: "En la pierna inferior aporta la flexión plantar de despegue; en la pierna superior estabiliza el tobillo sobre la huella del escalón.",
+          clinicalNote: "Permite una transición suave de carga sin impacto brusco sobre el talón."
+        },
+        {
+          id: "gluteo-medio-stairs",
+          name: "Glúteo Medio (Pilar Estabilizador Pélvico)",
+          scientificName: "Musculus gluteus medius",
+          role: "Fijador Frontal Esencial (Anti-Trendelenburg)",
+          roleType: "stabilizer",
+          compartment: "Región Glútea Lateral",
+          origin: "Cara glútea externa del hueso ilion entre las líneas anterior y posterior.",
+          insertion: "Cara lateral del trocánter mayor del fémur.",
+          innervation: "Nervio Glúteo Superior (L4, L5, S1).",
+          action: "Mantiene la pelvis perfectamente horizontal en el plano frontal durante la fase de apoyo unipodal en el escalón.",
+          clinicalNote: "Si el glúteo medio es débil, la pelvis del lado opuesto cae (Marcha de Trendelenburg) y la rodilla de apoyo colapsa en valgo excesivo."
+        },
+        {
+          id: "tibial-anterior-stairs",
+          name: "Tibial Anterior",
+          scientificName: "Musculus tibialis anterior",
+          role: "Fijador y Posicionador del Pie",
+          roleType: "stabilizer",
+          compartment: "Compartimento Anterior de la Pierna",
+          origin: "Cóndilo lateral y dos tercios superiores de la diáfisis tibial y membrana interósea.",
+          insertion: "Cuneiforme medial y base del primer metatarsiano.",
+          innervation: "Nervio Peroneo Profundo (L4, L5).",
+          action: "Dorsiflexiona el pie para que los dedos no tropiecen con la contrahuella del escalón al elevar la pierna.",
+          clinicalNote: "Previene caídas por tropezón frontal en escaleras en adultos mayores y pacientes neurológicos."
+        }
+      ]
+    },
+
+    // -------------------------------------------------------------------------
+    // AVD 5: ROTACIÓN DE TRONCO AL GIRARSE (GIRO AXIAL ESPINAL / TWIST)
+    // -------------------------------------------------------------------------
+    {
+      id: "rotacion-tronco-giro",
+      category: "vida-diaria",
+      name: "Rotación de tronco al girarse (Giro Axial del Raquis / Torso Twist)",
+      region: "vida-diaria",
+      regionLabel: "Vida Diaria (AVD) • Columna Vertebral y Core Torsional",
+      code: "AVD-05",
+      dailyAction: "Giro del tronco y la cabeza en el plano transversal para mirar hacia atrás, alcanzar un objeto colocado en el asiento trasero del auto o pasar un objeto hacia un costado.",
+      joint: "Articulaciones Intervertebrales Torácicas (T1-T12), Cervicales (C1-C7, esp. Atlantoaxoidea) y Caderas (Coxofemorales)",
+      jointType: "Artrodias interapofisarias torácicas, Trocoide (C1-C2) y Enartrosis (Caderas)",
+      plane: "Transversal",
+      axis: "Eje Longitudinal Céfalo-Caudal (Vertical)",
+      rom: "Rotación torácica: 35° por lado | Cervical: 60°-70° | Lumbar: restringida a 5°",
+      description: "Giro armónico guiado por la orientación coronal de las carillas torácicas. Las vértebras lumbares tienen carillas sagitales que bloquean la rotación para proteger los discos.",
+      lever: "3er Género torsional alrededor del cilindro axial espinal",
+      animationType: "daily-trunk-rotation",
+      highlightedMuscle: "Oblicuos Abdominales (Par Cruzado) y Multífidos (Fijadores)",
+      searchTerms: ["rotacion de tronco", "girarse", "mirar atras", "torsion", "tronco", "espalda", "oblicuos", "asiento trasero", "vida diaria", "avd"],
+      primaryMuscle: "Oblicuo Externo contralateral y Oblicuo Interno ipsilateral (Par de fuerzas cruzado)",
+      synergistMuscles: ["Músculos Rotadores y Multífidos profundos", "Dorsal ancho", "Esternocleidomastoideo contralateral"],
+      stabilizers: "Transverso del abdomen (faja torsional), Erectores espinales y Pelvis/Glúteo medio",
+      muscles: [
+        {
+          id: "oblicuo-externo-twist",
+          name: "Oblicuo Externo del Abdomen (Lado Opuesto al Giro)",
+          scientificName: "Musculus obliquus externus abdominis",
+          role: "Motor Primario Agónico (Contralateral)",
+          roleType: "primary",
+          compartment: "Pared Abdominal Anterolateral Superficial",
+          origin: "Caras externas y bordes inferiores de las costillas 5ª a 12ª.",
+          insertion: "Línea alba, tubérculo del pubis y mitad anterior del labio externo de la cresta ilíaca.",
+          innervation: "Nervios Intercostales inferiores (T7-T11) y Nervio Subcostal (T12).",
+          action: "Sus fibras oblicuas 'en manos a los bolsillos' traccionan la caja torácica rotándola hacia el lado opuesto (giro a la derecha activa oblicuo izquierdo).",
+          clinicalNote: "Forma una cinta miofascial cruzada con el oblicuo interno opuesto alrededor del ombligo."
+        },
+        {
+          id: "oblicuo-interno-twist",
+          name: "Oblicuo Interno del Abdomen (Mismo Lado del Giro)",
+          scientificName: "Musculus obliquus internus abdominis",
+          role: "Motor Primario Agónico (Ipsilateral)",
+          roleType: "primary",
+          compartment: "Pared Abdominal Anterolateral Media",
+          origin: "Fascia toracolumbar, dos tercios anteriores de la cresta ilíaca y tercio lateral del ligamento inguinal.",
+          insertion: "Bordes inferiores de las costillas 10ª a 12ª, línea alba y pecten del pubis.",
+          innervation: "Nervios Intercostales inferiores (T7-T12), Nervio Iliohipogástrico e Ilioinguinal (L1).",
+          action: "Tracciona las costillas inferiores hacia la cresta ilíaca del mismo lado, rotando el tronco hacia su propio lado en acoplamiento con el oblicuo externo contralateral.",
+          clinicalNote: "Es el motor que completa el par de torsión horizontal sin flexionar el tronco hacia adelante."
+        },
+        {
+          id: "multifidos-rotadores-twist",
+          name: "Multífidos y Rotadores Cortos y Largos",
+          scientificName: "Musculi multifidi et rotatores spinae",
+          role: "Sinergista Segmentario Profundo",
+          roleType: "synergist",
+          compartment: "Surco Vertebral Profundo (Canales Paravertebrales)",
+          origin: "Apófisis transversas y mamilares de las vértebras dorsales y lumbares.",
+          insertion: "Apófisis espinosas de las vértebras superiores (saltando de 1 a 3 niveles).",
+          innervation: "Ramos dorsales de los nervios espinales correspondientes.",
+          action: "Rotan vértebra a vértebra hacia el lado opuesto a su contracción y estabilizan la columna contra la fuerza de cizallamiento transversal.",
+          clinicalNote: "Tienen la mayor densidad de propioceptores de la columna, informando al cerebro de la posición exacta de cada vértebra."
+        },
+        {
+          id: "ecm-twist",
+          name: "Esternocleidomastoideo (ECM Contralateral)",
+          scientificName: "Musculus sternocleidomastoideus",
+          role: "Sinergista Cervical de Mirada",
+          roleType: "synergist",
+          compartment: "Región Anterolateral del Cuello",
+          origin: "Manubrio esternal y tercio medial de la clavícula.",
+          insertion: "Cara lateral de la apófisis mastoides del hueso temporal y línea nucal superior.",
+          innervation: "Nervio Accesorio (XI par craneal) y ramos cervicales C2-C3.",
+          action: "Gira la cabeza hacia el lado opuesto acompañando el movimiento de los ojos y del tronco.",
+          clinicalNote: "Inicia el reflejo oculocefálico guiando la rotación global del cuerpo."
+        },
+        {
+          id: "transverso-faja-twist",
+          name: "Transverso del Abdomen (Faja Torsional Antilesión)",
+          scientificName: "Musculus transversus abdominis",
+          role: "Fijador Protector de Discos Lumbares",
+          roleType: "stabilizer",
+          compartment: "Pared Abdominal Profunda",
+          origin: "Fascia toracolumbar, cresta ilíaca interna y cartílagos costales inferiores.",
+          insertion: "Línea alba y cresta del pubis.",
+          innervation: "Nervios Intercostales inferiores y nervios de L1.",
+          action: "Co-contracción circunferencial que comprime las vísceras y tensa la fascia toracolumbar, limitando la torsión lumbar excesiva.",
+          clinicalNote: "Girar el tronco levantando un peso sin activar el transverso es la causa mecánica número uno de rotura del anillo fibroso y hernia discal lumbar."
+        },
+        {
+          id: "caderas-rot-twist",
+          name: "Pelvis y Rotadores de Cadera (Glúteo Medio y Pelvitrocantéreos)",
+          scientificName: "Musculi pelvitrochanterici",
+          role: "Fijadores de la Base Pélvica",
+          roleType: "stabilizer",
+          compartment: "Cintura Pélvica y Caderas",
+          origin: "Sacro, ilion y marco isquiopubiano.",
+          insertion: "Trocánter mayor y fosa trocantérica del fémur.",
+          innervation: "Ramos del plexo sacro y nervio glúteo superior.",
+          action: "Fijan la pelvis y permiten una rotación interna en la cadera del lado del giro y rotación externa en la contraria, disipando la torsión sin forzar la espalda.",
+          clinicalNote: "La falta de rotación en las caderas sobrecarga automáticamente la columna lumbar durante los giros cotidianos."
+        }
+      ]
+    },
+
+    // =========================================================================
+    // --- CATEGORÍA 2: MOVIMIENTOS ARTICULARES ANALÍTICOS (BASE) ---
+    // =========================================================================
+
+    // -------------------------------------------------------------------------
+    // 1. FLEXIÓN DE CODO
+    // -------------------------------------------------------------------------
     {
       id: "flexion-codo",
+      category: "analitico",
       name: "Flexión de Codo",
       region: "codo",
       regionLabel: "Codo • Miembro Superior",
@@ -100,11 +648,12 @@ const ANATOMY_DATABASE = {
       ]
     },
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
     // 2. EXTENSIÓN DE CODO
-    // =========================================================================
+    // -------------------------------------------------------------------------
     {
       id: "extension-codo",
+      category: "analitico",
       name: "Extensión de Codo",
       region: "codo",
       regionLabel: "Codo • Miembro Superior",
@@ -152,11 +701,12 @@ const ANATOMY_DATABASE = {
       ]
     },
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
     // 3. ABDUCCIÓN DE HOMBRO
-    // =========================================================================
+    // -------------------------------------------------------------------------
     {
       id: "abduccion-hombro",
+      category: "analitico",
       name: "Abducción de Hombro",
       region: "hombro",
       regionLabel: "Hombro • Cintura Escapular",
@@ -243,11 +793,12 @@ const ANATOMY_DATABASE = {
       ]
     },
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
     // 4. FLEXIÓN DE HOMBRO
-    // =========================================================================
+    // -------------------------------------------------------------------------
     {
       id: "flexion-hombro",
+      category: "analitico",
       name: "Flexión de Hombro (Anteversión)",
       region: "hombro",
       regionLabel: "Hombro • Cintura Escapular",
@@ -321,11 +872,12 @@ const ANATOMY_DATABASE = {
       ]
     },
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
     // 5. EXTENSIÓN DE RODILLA
-    // =========================================================================
+    // -------------------------------------------------------------------------
     {
       id: "extension-rodilla",
+      category: "analitico",
       name: "Extensión de Rodilla",
       region: "rodilla",
       regionLabel: "Rodilla • Miembro Inferior",
@@ -412,11 +964,12 @@ const ANATOMY_DATABASE = {
       ]
     },
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
     // 6. FLEXIÓN DE RODILLA
-    // =========================================================================
+    // -------------------------------------------------------------------------
     {
       id: "flexion-rodilla",
+      category: "analitico",
       name: "Flexión de Rodilla",
       region: "rodilla",
       regionLabel: "Rodilla • Miembro Inferior",
@@ -529,11 +1082,12 @@ const ANATOMY_DATABASE = {
       ]
     },
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
     // 7. FLEXIÓN DE CADERA
-    // =========================================================================
+    // -------------------------------------------------------------------------
     {
       id: "flexion-cadera",
+      category: "analitico",
       name: "Flexión de Cadera (Nutación Femoral)",
       region: "cadera",
       regionLabel: "Cadera • Pelvis y Muslo",
@@ -646,11 +1200,12 @@ const ANATOMY_DATABASE = {
       ]
     },
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
     // 8. ABDUCCIÓN DE CADERA
-    // =========================================================================
+    // -------------------------------------------------------------------------
     {
       id: "abduccion-cadera",
+      category: "analitico",
       name: "Abducción de Cadera",
       region: "cadera",
       regionLabel: "Cadera • Cintura Pélvica",
@@ -724,11 +1279,12 @@ const ANATOMY_DATABASE = {
       ]
     },
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
     // 9. DORSIFLEXIÓN DE TOBILLO
-    // =========================================================================
+    // -------------------------------------------------------------------------
     {
       id: "dorsiflexion-tobillo",
+      category: "analitico",
       name: "Dorsiflexión de Tobillo (Flexión Dorsal)",
       region: "tobillo",
       regionLabel: "Tobillo • Pierna y Pie",
@@ -802,11 +1358,12 @@ const ANATOMY_DATABASE = {
       ]
     },
 
-    // =========================================================================
+    // -------------------------------------------------------------------------
     // 10. FLEXIÓN PLANTAR DE TOBILLO
-    // =========================================================================
+    // -------------------------------------------------------------------------
     {
       id: "flexion-plantar-tobillo",
+      category: "analitico",
       name: "Flexión Plantar de Tobillo",
       region: "tobillo",
       regionLabel: "Tobillo • Pierna y Pie",
