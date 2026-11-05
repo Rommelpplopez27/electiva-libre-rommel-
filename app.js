@@ -1,4 +1,4 @@
-// =============================================================================
+﻿// =============================================================================
 // KineFlash PRO - Motor de Interacción, Búsqueda y Cinemática Biomecánica Unificada
 // Módulo de Movimientos Analíticos y Actividades de la Vida Diaria (AVD)
 // =============================================================================
@@ -187,437 +187,172 @@ function setupSearchListener() {
 // -----------------------------------------------------------------------------
 // 5. Generador del Reproductor Visual Unificado por Movimiento (Sin duplicados)
 // -----------------------------------------------------------------------------
+const activePlayerMode = {};
+
+const ANATOMICAL_GIF_DATABASE = {
+  // 1. Flexión de Codo
+  "elbow-flexion": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Standing-biceps-curl-1.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Biceps_brachii_muscle_-_animation01.gif",
+    label: "Flexión de Codo (Aproximación de antebrazo hacia el brazo)",
+    plane: "Plano Sagital"
+  },
+  // 2. Extensión de Codo (Corregida: extensión concéntrica de tríceps de flexión a neutro)
+  "elbow-extension": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Standing-triceps-extension-1.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Triceps_brachii_muscle_-_animation01.gif",
+    label: "Extensión de Codo (Alineación recta de antebrazo y activación de tríceps)",
+    plane: "Plano Sagital"
+  },
+  // 3. Abducción de Hombro
+  "shoulder-abduction": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
+    label: "Abducción de Hombro (Separación del brazo de la línea media)",
+    plane: "Plano Frontal"
+  },
+  // 4. Flexión de Hombro
+  "shoulder-flexion": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
+    label: "Flexión de Hombro (Anteversión anterior del brazo)",
+    plane: "Plano Sagital"
+  },
+  // 5. Extensión de Rodilla
+  "knee-extension": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Quadricep-animation.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Quadricep-animation.gif",
+    label: "Extensión de Rodilla (Alineación de pierna por cuádriceps de 90° a 0°)",
+    plane: "Plano Sagital"
+  },
+  // 6. Flexión de Rodilla
+  "knee-flexion": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Biceps_femoris_muscle_-_animation_1.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Biceps_femoris_muscle_-_animation_1.gif",
+    label: "Flexión de Rodilla (Isquiotibiales y bíceps femoral de 0° a 130°)",
+    plane: "Plano Sagital"
+  },
+  // 7. Flexión de Cadera
+  "hip-flexion": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/1/1d/Iliacus_muscle_-_animation_1.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/1/1d/Iliacus_muscle_-_animation_1.gif",
+    label: "Flexión de Cadera (Elevación anterior del fémur por psoas ilíaco)",
+    plane: "Plano Sagital"
+  },
+  // 8. Abducción de Cadera
+  "hip-abduction": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Gluteus_medius_muscle_-_animation01.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Gluteus_medius_muscle_-_animation01.gif",
+    label: "Abducción de Cadera (Separación lateral de la extremidad por glúteo medio)",
+    plane: "Plano Frontal"
+  },
+  // 9. Dorsiflexión de Tobillo
+  "ankle-dorsiflexion": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Tibialis_anterior_muscle_-_animation.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Tibialis_anterior_muscle_-_animation.gif",
+    label: "Dorsiflexión de Tobillo (Elevación del dorso del pie por tibial anterior)",
+    plane: "Plano Sagital"
+  },
+  // 10. Flexión Plantar de Tobillo
+  "ankle-plantarflexion": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/1/11/Standing-calf-raises-1.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/f/f2/Gastrocnemius_muscle_-_animation.gif",
+    label: "Flexión Plantar de Tobillo (Elevación sobre puntas por tríceps sural)",
+    plane: "Plano Sagital"
+  },
+  // Actividades de la Vida Diaria (AVD)
+  "daily-squat": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/a/a4/One-leg-squat-1.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Quadricep-animation.gif",
+    label: "Agacharse / Sentadilla (Triple flexión funcional en cadena cerrada)",
+    plane: "Plano Sagital"
+  },
+  "daily-shelf-reach": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
+    label: "Alcanzar estante alto (Ritmo escápulo-humeral y deltoides)",
+    plane: "Plano Sagital"
+  },
+  "daily-door-push": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Triceps_brachii_muscle_-_animation01.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Triceps_brachii_muscle_-_animation01.gif",
+    label: "Empujar puerta pesada (Extensión coordinada y pectoral)",
+    plane: "Plano Sagital"
+  },
+  "daily-stairs-climb": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/a/a4/One-leg-squat-1.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Quadricep-animation.gif",
+    label: "Subir escaleras (Ascenso en carga monopodal)",
+    plane: "Plano Sagital"
+  },
+  "daily-trunk-rotation": {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Gluteus_medius_muscle_-_animation01.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Gluteus_medius_muscle_-_animation01.gif",
+    label: "Rotación de tronco al girarse (Torsión de raquis y oblicuos)",
+    plane: "Plano Transversal"
+  }
+};
+
+function setPlayerMode(movementId, mode) {
+  activePlayerMode[movementId] = mode;
+  renderMovementFeed();
+}
+
 function renderUnifiedMotionPlayer(movement) {
   const isPaused = !!animationPausedState[movement.id];
-  let svgContent = "";
+  const playerMode = activePlayerMode[movement.id] || "movement";
+  const asset = ANATOMICAL_GIF_DATABASE[movement.animationType] || {
+    movementGif: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Standing-biceps-curl-1.gif",
+    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Biceps_brachii_muscle_-_animation01.gif",
+    label: movement.name,
+    plane: "Plano " + movement.plane
+  };
 
-  switch (movement.animationType) {
-    // ----------------- CASOS DE ACTIVIDADES DE LA VIDA DIARIA (AVD) -----------------
-    case "daily-squat":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <!-- Suelo de Apoyo y Carga en el suelo -->
-          <line x1="40" y1="165" x2="280" y2="165" stroke="#334155" stroke-width="3" stroke-dasharray="4 2"/>
-          <rect x="175" y="145" width="28" height="20" rx="3" fill="#f59e0b" fill-opacity="0.8" stroke="#fbbf24" stroke-width="1.5"/>
-          <text x="178" y="158" fill="#000" font-size="8" font-family="JetBrains Mono" font-weight="bold">CARGA</text>
-
-          <!-- Figura en Sentadilla Funcional (Bucle Dinámico) -->
-          <g class="motion-loop-daily-squat">
-            <!-- Cabeza -->
-            <circle cx="130" cy="40" r="9" fill="#e2e8f0"/>
-            
-            <!-- Tronco e Inclinación Neutra (Erectores Espinales Resaltados) -->
-            <line x1="130" y1="48" x2="142" y2="92" stroke="#475569" stroke-width="12" stroke-linecap="round"/>
-            <path d="M 126 50 L 138 92" stroke="#10b981" stroke-width="5" stroke-linecap="round" class="muscle-contract"/>
-            
-            <!-- Brazo que se extiende hacia el objeto del suelo -->
-            <line x1="130" y1="52" x2="175" y2="120" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
-            
-            <!-- Cadera (Glúteo Mayor Resaltado en Contracción) -->
-            <circle cx="142" cy="92" r="8" fill="#0f172a" stroke="#00f2fe" stroke-width="2.5"/>
-            <path d="M 136 82 Q 120 95 142 98" fill="none" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-            
-            <!-- Muslo / Fémur (Cuádriceps Resaltado) -->
-            <line x1="142" y1="92" x2="172" y2="128" stroke="#475569" stroke-width="10" stroke-linecap="round"/>
-            <path d="M 144 88 L 170 124" stroke="#00f2fe" stroke-width="6" stroke-linecap="round" class="muscle-contract"/>
-            
-            <!-- Rodilla -->
-            <circle cx="172" cy="128" r="6" fill="#0f172a" stroke="#f59e0b" stroke-width="2"/>
-            
-            <!-- Pierna / Tibia -->
-            <line x1="172" y1="128" x2="160" y2="165" stroke="#94a3b8" stroke-width="8" stroke-linecap="round"/>
-            <!-- Pie en el suelo -->
-            <line x1="150" y1="165" x2="178" y2="165" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round"/>
-          </g>
-
-          <!-- Marcadores Anatómicos -->
-          <text x="25" y="35" fill="#10b981" font-size="9" font-family="JetBrains Mono" font-weight="bold">🛡️ Fijador: Erectores + Core</text>
-          <text x="25" y="70" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Agonistas: Glúteo Mayor + Cuádriceps</text>
-          <text x="25" y="85" fill="#f59e0b" font-size="9" font-family="JetBrains Mono">🔗 Bisagra de Cadera (Hip Hinge)</text>
-        </svg>
-      `;
-      break;
-
-    case "daily-shelf-reach":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <!-- Estante Superior con Objeto -->
-          <line x1="190" y1="35" x2="295" y2="35" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
-          <rect x="220" y="15" width="22" height="20" rx="3" fill="#f59e0b" stroke="#fbbf24" stroke-width="1.5"/>
-          <text x="248" y="28" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">ESTANTE</text>
-
-          <!-- Figura Alcanzando en Elevación y Rotación Escapular -->
-          <!-- Columna y Tronco -->
-          <line x1="120" y1="65" x2="120" y2="160" stroke="#334155" stroke-width="14" stroke-linecap="round"/>
-          <circle cx="120" cy="50" r="9" fill="#e2e8f0"/>
-          
-          <!-- Escápula Rotando Hacia Arriba (Serrato Anterior Resaltado) -->
-          <path d="M 125 70 L 140 85 L 132 105 Z" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
-          <path d="M 115 85 Q 130 92 138 85" stroke="#10b981" stroke-width="5" stroke-linecap="round" class="muscle-contract"/>
-
-          <!-- Hombro y Brazo Elevándose en Bucle -->
-          <circle cx="130" cy="68" r="8" fill="#0f172a" stroke="#00f2fe" stroke-width="2.5"/>
-          <g class="motion-loop-daily-shelf-reach">
-            <!-- Húmero Elevándose -->
-            <line x1="130" y1="68" x2="185" y2="40" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
-            <!-- Codo extendiéndose -->
-            <circle cx="185" cy="40" r="5" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
-            <!-- Antebrazo y Mano alcanzando -->
-            <line x1="185" y1="40" x2="225" y2="25" stroke="#cbd5e1" stroke-width="7" stroke-linecap="round"/>
-            <circle cx="225" cy="25" r="4" fill="#fcb045"/>
-          </g>
-
-          <!-- Deltoides en Contracción en el Hombro -->
-          <path d="M 125 62 Q 145 60 148 72" stroke="#00f2fe" stroke-width="7" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="125" cy="62" r="4" fill="#00f2fe" class="origin-indicator"/>
-
-          <text x="15" y="35" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Deltoides + Serrato Anterior</text>
-          <text x="15" y="50" fill="#10b981" font-size="9" font-family="JetBrains Mono">🛡️ Fijador: Manguito Rotador</text>
-          <text x="15" y="150" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Ritmo Escápulo-Humeral 2:1</text>
-        </svg>
-      `;
-      break;
-
-    case "daily-door-push":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <!-- Puerta Pesada Vertical -->
-          <rect x="235" y="20" width="14" height="145" rx="3" fill="#334155" stroke="#64748b" stroke-width="2"/>
-          <circle cx="242" cy="95" r="3" fill="#f59e0b"/>
-          <text x="255" y="98" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">PUERTA</text>
-
-          <!-- Figura en Postura de Zancada Empujando -->
-          <line x1="85" y1="165" x2="250" y2="165" stroke="#334155" stroke-width="2"/>
-          
-          <!-- Pierna Trasera que Empuja contra el Suelo -->
-          <line x1="100" y1="165" x2="125" y2="125" stroke="#94a3b8" stroke-width="9" stroke-linecap="round"/>
-          <line x1="125" y1="125" x2="145" y2="105" stroke="#475569" stroke-width="11" stroke-linecap="round"/>
-          
-          <!-- Pierna Delantera en Soporte -->
-          <line x1="160" y1="165" x2="168" y2="135" stroke="#94a3b8" stroke-width="9" stroke-linecap="round"/>
-          <line x1="168" y1="135" x2="152" y2="105" stroke="#475569" stroke-width="11" stroke-linecap="round"/>
-
-          <!-- Tronco y Brazos con Empuje Dinámico -->
-          <g class="motion-loop-daily-door-push">
-            <!-- Cabeza -->
-            <circle cx="160" cy="50" r="9" fill="#e2e8f0"/>
-            <!-- Tronco Inclinado hacia adelante -->
-            <line x1="148" y1="105" x2="165" y2="60" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
-            <!-- Core Abdominal Fijador Torsional -->
-            <line x1="156" y1="72" x2="150" y2="98" stroke="#10b981" stroke-width="6" stroke-linecap="round" class="muscle-contract"/>
-            <!-- Pectoral Mayor Resaltado en Contracción -->
-            <path d="M 166 65 Q 185 70 188 78" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-            <!-- Brazo Extendiéndose y Empujando -->
-            <line x1="166" y1="65" x2="200" y2="82" stroke="#94a3b8" stroke-width="9" stroke-linecap="round"/>
-            <circle cx="200" cy="82" r="5" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
-            <line x1="200" y1="82" x2="235" y2="85" stroke="#cbd5e1" stroke-width="8" stroke-linecap="round"/>
-            <rect x="233" y="80" width="4" height="12" rx="1" fill="#f59e0b"/>
-          </g>
-
-          <text x="20" y="30" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Pectoral Mayor + Tríceps</text>
-          <text x="20" y="45" fill="#10b981" font-size="9" font-family="JetBrains Mono">🛡️ Fijador: Core Antirretroceso</text>
-          <text x="20" y="60" fill="#f59e0b" font-size="8" font-family="JetBrains Mono">Cadena Cinética desde el Suelo</text>
-        </svg>
-      `;
-      break;
-
-    case "daily-stairs-climb":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <!-- Gradas / Escalones -->
-          <path d="M 120 165 L 160 165 L 160 135 L 210 135 L 210 105 L 260 105 L 260 75 L 305 75" fill="none" stroke="#475569" stroke-width="3"/>
-          <text x="265" y="68" fill="#94a3b8" font-size="8" font-family="JetBrains Mono">ESCALÓN</text>
-
-          <!-- Figura Subiendo el Escalón (Elevación Unipodal) -->
-          <g class="motion-loop-daily-stairs-climb">
-            <!-- Cabeza y Tronco Erguido -->
-            <circle cx="175" cy="35" r="9" fill="#e2e8f0"/>
-            <line x1="175" y1="44" x2="175" y2="88" stroke="#475569" stroke-width="13" stroke-linecap="round"/>
-            
-            <!-- Pelvis (Glúteo Medio Fijador Antivalgo Resaltado) -->
-            <circle cx="175" cy="88" r="7" fill="#0f172a" stroke="#10b981" stroke-width="2.5"/>
-            <path d="M 166 82 Q 160 92 172 95" stroke="#10b981" stroke-width="6" stroke-linecap="round" class="muscle-contract"/>
-            
-            <!-- Miembro de Apoyo en Escalón: Extensión Potente -->
-            <!-- Cadera / Glúteo Mayor -->
-            <path d="M 172 85 L 195 105" stroke="#00f2fe" stroke-width="10" stroke-linecap="round" class="muscle-contract"/>
-            <!-- Rodilla Extendiéndose -->
-            <circle cx="195" cy="105" r="6" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
-            <line x1="195" y1="105" x2="190" y2="135" stroke="#cbd5e1" stroke-width="8" stroke-linecap="round"/>
-            <!-- Pie apoyado en peldaño -->
-            <line x1="180" y1="135" x2="208" y2="135" stroke="#cbd5e1" stroke-width="5" stroke-linecap="round"/>
-
-            <!-- Pierna Trasera en Despegue -->
-            <line x1="175" y1="88" x2="150" y2="120" stroke="#64748b" stroke-width="8" stroke-linecap="round"/>
-            <line x1="150" y1="120" x2="145" y2="165" stroke="#475569" stroke-width="7" stroke-linecap="round"/>
-          </g>
-
-          <text x="20" y="30" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Cuádriceps + Glúteo Mayor</text>
-          <text x="20" y="45" fill="#10b981" font-size="9" font-family="JetBrains Mono">🛡️ Fijador: Glúteo Medio (Pilar Pélvico)</text>
-          <text x="20" y="60" fill="#f59e0b" font-size="8" font-family="JetBrains Mono">Carga Monopodal x3 Peso Corporal</text>
-        </svg>
-      `;
-      break;
-
-    case "daily-trunk-rotation":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <!-- Pelvis y Caderas Fijas (Base Estable) -->
-          <line x1="120" y1="140" x2="200" y2="140" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
-          <circle cx="160" cy="140" r="7" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
-          <text x="135" y="158" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">PELVIS FIJA</text>
-
-          <!-- Columna y Caja Torácica Girando en Bucle Axial -->
-          <g class="motion-loop-daily-trunk-rotation">
-            <!-- Eje Espinal Central -->
-            <line x1="160" y1="50" x2="160" y2="140" stroke="#475569" stroke-width="8" stroke-dasharray="3 2"/>
-            
-            <!-- Hombros Girando en el Plano Transversal -->
-            <line x1="110" y1="65" x2="210" y2="65" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
-            <circle cx="160" cy="40" r="10" fill="#e2e8f0"/>
-            
-            <!-- Nariz / Dirección de la Mirada Gira -->
-            <line x1="160" y1="40" x2="175" y2="35" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-
-            <!-- Par de Fuerzas Cruzado de Oblicuos (Contracción Resaltada) -->
-            <!-- Oblicuo Externo Opuesto -->
-            <path d="M 125 70 Q 150 95 170 135" stroke="#00f2fe" stroke-width="7" stroke-linecap="round" class="muscle-contract"/>
-            <!-- Oblicuo Interno Mismo Lado -->
-            <path d="M 195 70 Q 170 95 150 135" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" class="muscle-contract"/>
-          </g>
-
-          <!-- Faja Estabilizadora del Transverso (Protector Discal) -->
-          <ellipse cx="160" cy="105" rx="35" ry="12" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="4 2"/>
-          
-          <text x="20" y="30" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Par Cruzado Oblicuo Int/Ext</text>
-          <text x="20" y="45" fill="#10b981" font-size="9" font-family="JetBrains Mono">🛡️ Fijador: Transverso (Faja Lumbar)</text>
-          <text x="20" y="115" fill="#f59e0b" font-size="8" font-family="JetBrains Mono">Torsión Torácica 35°</text>
-        </svg>
-      `;
-      break;
-
-    // ----------------- CASOS DE MOVIMIENTOS ANALÍTICOS BASE -----------------
-    case "elbow-flexion":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <defs>
-            <linearGradient id="efGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#00f2fe"/>
-              <stop offset="100%" stop-color="#006a70"/>
-            </linearGradient>
-          </defs>
-          <line x1="160" y1="22" x2="160" y2="105" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
-          <circle cx="160" cy="22" r="10" fill="#64748b"/>
-          <text x="175" y="30" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">HÚMERO</text>
-          <circle cx="160" cy="105" r="7" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
-          <text x="175" y="110" fill="#38bdf8" font-size="9" font-family="JetBrains Mono">Eje Tróclea</text>
-          <g class="motion-loop-elbow-flexion">
-            <line x1="160" y1="105" x2="160" y2="170" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
-            <circle cx="160" cy="170" r="6" fill="#cbd5e1"/>
-            <text x="172" y="152" fill="#cbd5e1" font-size="9" font-family="JetBrains Mono">Cúbito/Radio</text>
-            <circle cx="160" cy="120" r="4" fill="#fcb045" stroke="#fff" stroke-width="1.5"/>
-          </g>
-          <path d="M 152 45 Q 135 75 152 105" fill="none" stroke="url(#efGrad)" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="152" cy="45" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <text x="45" y="55" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">📍 Origen: Húmero distal</text>
-          <text x="45" y="90" fill="#38bdf8" font-size="10" font-family="JetBrains Mono">⚡ Braquial + Bíceps</text>
-        </svg>
-      `;
-      break;
-
-    case "elbow-extension":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <line x1="160" y1="22" x2="160" y2="105" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
-          <circle cx="160" cy="22" r="10" fill="#64748b"/>
-          <text x="175" y="30" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">HÚMERO</text>
-          <circle cx="160" cy="105" r="7" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
-          <path d="M 168 35 Q 185 70 166 102" fill="none" stroke="#fd1d1d" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="168" cy="35" r="4" fill="#fd1d1d" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <text x="180" y="50" fill="#ff7675" font-size="10" font-family="JetBrains Mono" font-weight="bold">📍 Tríceps (3 Cabezas)</text>
-          <g class="motion-loop-elbow-extension">
-            <line x1="160" y1="105" x2="160" y2="170" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
-            <circle cx="160" cy="170" r="6" fill="#cbd5e1"/>
-          </g>
-          <text x="35" y="95" fill="#38bdf8" font-size="10" font-family="JetBrains Mono">⚡ Tríceps + Ancóneo</text>
-        </svg>
-      `;
-      break;
-
-    case "shoulder-abduction":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <path d="M 160 40 L 160 160" stroke="#334155" stroke-width="16" stroke-linecap="round"/>
-          <path d="M 160 40 L 130 65 L 145 95 Z" fill="#1e293b" stroke="#475569"/>
-          <text x="75" y="65" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">ESCÁPULA</text>
-          <circle cx="160" cy="40" r="8" fill="#d5baff" stroke="#833ab4" stroke-width="2"/>
-          <text x="175" y="40" fill="#d5baff" font-size="9" font-family="JetBrains Mono">Acromion</text>
-          <g class="motion-loop-shoulder-abduction">
-            <line x1="160" y1="40" x2="160" y2="125" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
-            <circle cx="160" cy="125" r="7" fill="#cbd5e1"/>
-            <circle cx="160" cy="75" r="4" fill="#fcb045" stroke="#fff" stroke-width="1.5"/>
-          </g>
-          <path d="M 160 40 Q 185 55 165 75" fill="none" stroke="#d5baff" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="160" cy="40" r="4.5" fill="#d5baff" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <text x="40" y="115" fill="#d5baff" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Deltoides (3 Cabezas)</text>
-          <text x="40" y="130" fill="#cbd5e1" font-size="9" font-family="JetBrains Mono">Acromial + Clavicular + Espinal</text>
-        </svg>
-      `;
-      break;
-
-    case "shoulder-flexion":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <line x1="155" y1="35" x2="155" y2="160" stroke="#334155" stroke-width="18" stroke-linecap="round"/>
-          <circle cx="155" cy="35" r="9" fill="#00f2fe"/>
-          <text x="75" y="40" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">CLAVÍCULA</text>
-          <g class="motion-loop-shoulder-flexion">
-            <line x1="155" y1="35" x2="155" y2="120" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
-            <circle cx="155" cy="120" r="6" fill="#cbd5e1"/>
-          </g>
-          <path d="M 155 35 Q 130 55 150 75" fill="none" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="155" cy="35" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <text x="35" y="105" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Deltoides Clavicular</text>
-          <text x="35" y="120" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">+ Coracobraquial</text>
-        </svg>
-      `;
-      break;
-
-    case "knee-extension":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <line x1="100" y1="95" x2="160" y2="95" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
-          <text x="95" y="80" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">FÉMUR</text>
-          <circle cx="160" cy="95" r="7" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
-          <ellipse cx="162" cy="88" rx="5" ry="4" fill="#fcb045"/>
-          <text x="175" y="88" fill="#fcb045" font-size="9" font-family="JetBrains Mono">Rótula</text>
-          <path d="M 105 85 Q 135 75 162 88" fill="none" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="105" cy="85" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <g class="motion-loop-knee-extension">
-            <line x1="160" y1="95" x2="225" y2="95" stroke="#94a3b8" stroke-width="11" stroke-linecap="round"/>
-            <circle cx="225" cy="95" r="6" fill="#cbd5e1"/>
-          </g>
-          <text x="35" y="135" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Cuádriceps (4 Cabezas)</text>
-          <text x="35" y="150" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Recto + Vasto Med/Lat/Interm</text>
-        </svg>
-      `;
-      break;
-
-    case "knee-flexion":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <line x1="160" y1="22" x2="160" y2="95" stroke="#475569" stroke-width="14" stroke-linecap="round"/>
-          <circle cx="160" cy="95" r="7" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
-          <text x="90" y="45" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">FÉMUR</text>
-          <path d="M 166 30 Q 185 65 166 92" fill="none" stroke="#833ab4" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="166" cy="30" r="4.5" fill="#d5baff" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <text x="180" y="35" fill="#d5baff" font-size="9" font-family="JetBrains Mono">Tuberosidad Isquiática</text>
-          <g class="motion-loop-knee-flexion">
-            <line x1="160" y1="95" x2="160" y2="165" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
-            <circle cx="160" cy="165" r="6" fill="#cbd5e1"/>
-          </g>
-          <text x="35" y="120" fill="#d5baff" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Isquiotibiales + Poplíteo</text>
-          <text x="35" y="135" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Bíceps Femoral, Semis y Gemelos</text>
-        </svg>
-      `;
-      break;
-
-    case "hip-flexion":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <line x1="160" y1="20" x2="160" y2="65" stroke="#334155" stroke-width="16" stroke-linecap="round"/>
-          <circle cx="160" cy="65" r="8" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
-          <text x="90" y="35" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">PELVIS/LUMBAR</text>
-          <path d="M 160 25 Q 140 45 155 75" fill="none" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="160" cy="25" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <text x="40" y="55" fill="#00f2fe" font-size="9" font-family="JetBrains Mono">T12-L5 y Fosa Ilíaca</text>
-          <g class="motion-loop-hip-flexion">
-            <line x1="160" y1="65" x2="160" y2="145" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
-            <circle cx="160" cy="145" r="7" fill="#cbd5e1"/>
-          </g>
-          <text x="40" y="115" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Psoas Mayor + Ilíaco</text>
-          <text x="40" y="130" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Recto Femoral, Sartorio y TFL</text>
-        </svg>
-      `;
-      break;
-
-    case "hip-abduction":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <path d="M 130 50 Q 160 30 190 50" fill="none" stroke="#475569" stroke-width="12"/>
-          <circle cx="160" cy="65" r="8" fill="#0f172a" stroke="#d5baff" stroke-width="2"/>
-          <text x="95" y="40" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Cresta Ilíaca</text>
-          <path d="M 175 40 Q 195 55 170 75" fill="none" stroke="#d5baff" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="175" cy="40" r="4.5" fill="#d5baff" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <g class="motion-loop-hip-abduction">
-            <line x1="160" y1="65" x2="160" y2="150" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
-            <circle cx="160" cy="150" r="6" fill="#cbd5e1"/>
-          </g>
-          <text x="35" y="110" fill="#d5baff" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Glúteo Medio + Menor</text>
-          <text x="35" y="125" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Pilar de Trendelenburg</text>
-        </svg>
-      `;
-      break;
-
-    case "ankle-dorsiflexion":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <line x1="160" y1="20" x2="160" y2="125" stroke="#475569" stroke-width="13" stroke-linecap="round"/>
-          <text x="95" y="55" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">TIBIA</text>
-          <circle cx="160" cy="125" r="7" fill="#0f172a" stroke="#00f2fe" stroke-width="2"/>
-          <path d="M 152 40 Q 145 85 152 125" fill="none" stroke="#00f2fe" stroke-width="8" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="152" cy="40" r="4.5" fill="#00f2fe" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <g class="motion-loop-ankle-dorsiflexion">
-            <line x1="160" y1="125" x2="220" y2="135" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
-            <circle cx="220" cy="135" r="6" fill="#cbd5e1"/>
-            <text x="210" y="155" fill="#cbd5e1" font-size="9" font-family="JetBrains Mono">Dorso Pie</text>
-          </g>
-          <text x="35" y="95" fill="#00f2fe" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Tibial Anterior + Extensores</text>
-          <text x="35" y="110" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Largo Dedos, Hallux y 3er Peroneo</text>
-        </svg>
-      `;
-      break;
-
-    case "ankle-plantarflexion":
-      svgContent = `
-        <svg viewBox="0 0 320 180" class="w-full h-44 bg-gradient-to-b from-[#18181b] via-[#121214] to-black">
-          <line x1="160" y1="20" x2="160" y2="125" stroke="#475569" stroke-width="13" stroke-linecap="round"/>
-          <circle cx="160" cy="125" r="7" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
-          <text x="80" y="45" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">TIBIA/FÉMUR</text>
-          <path d="M 166 30 Q 185 75 166 122" fill="none" stroke="#fd1d1d" stroke-width="9" stroke-linecap="round" class="muscle-contract"/>
-          <circle cx="166" cy="30" r="4.5" fill="#ff7675" stroke="#fff" stroke-width="1.5" class="origin-indicator"/>
-          <text x="180" y="80" fill="#ff7675" font-size="9" font-family="JetBrains Mono">Tendón Aquiles</text>
-          <g class="motion-loop-ankle-plantarflexion">
-            <line x1="160" y1="125" x2="215" y2="160" stroke="#94a3b8" stroke-width="10" stroke-linecap="round"/>
-            <circle cx="215" cy="160" r="6" fill="#cbd5e1"/>
-          </g>
-          <text x="35" y="110" fill="#ff7675" font-size="10" font-family="JetBrains Mono" font-weight="bold">⚡ Gastrocnemios + Sóleo</text>
-          <text x="35" y="125" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">Tibial Posterior y Flexores</text>
-        </svg>
-      `;
-      break;
-
-    default:
-      svgContent = `<div class="h-44 flex items-center justify-center text-xs text-neutral-500 font-mono">Cinemática en bucle activa</div>`;
-  }
+  const currentMediaUrl = (playerMode === "anatomy" && asset.anatomyGif) ? asset.anatomyGif : asset.movementGif;
 
   return `
     <div class="relative w-full overflow-hidden rounded-xl border border-[#262626] shadow-inner bg-black ${isPaused ? 'animation-paused' : ''}">
-      <!-- Header Superior del Reproductor Único -->
-      <div class="absolute top-2 left-2 right-2 z-10 flex items-center justify-between pointer-events-none">
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/80 backdrop-blur-md border border-[#333] text-[9px] font-mono text-cyan-300 font-bold uppercase tracking-wider">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          ${movement.category === 'vida-diaria' ? 'Cinemática AVD 60 FPS' : 'Loop Cinemático 60 FPS'}
+      <!-- Cabecera Superior del Reproductor -->
+      <div class="absolute top-2 left-2 right-2 z-20 flex items-center justify-between pointer-events-none">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/85 backdrop-blur-md border border-[#333] text-[9px] font-mono text-cyan-300 font-bold uppercase tracking-wider">
+          <span class="w-1.5 h-1.5 rounded-full ${isPaused ? 'bg-amber-400' : 'bg-emerald-400 animate-pulse'}"></span>
+          ${isPaused ? 'Pausado' : 'Cuerpo Anatómico en Movimiento'}
         </span>
         <button 
-          onclick="togglePauseMovement('${movement.id}')"
-          class="pointer-events-auto p-1 rounded-full bg-black/80 hover:bg-[#262626] border border-[#333] text-neutral-300 hover:text-white transition-all shadow-sm">
-          <span class="material-symbols-outlined text-[15px]">${isPaused ? 'play_arrow' : 'pause'}</span>
+          onclick="event.stopPropagation(); togglePauseMovement('${movement.id}')"
+          class="pointer-events-auto p-1.5 rounded-full bg-black/80 hover:bg-[#262626] border border-[#333] text-neutral-300 hover:text-white transition-all shadow-md active:scale-95">
+          <span class="material-symbols-outlined text-[16px]">${isPaused ? 'play_arrow' : 'pause'}</span>
         </button>
       </div>
 
-      <!-- Animación Biomecánica en Bucle Única -->
-      ${svgContent}
+      <!-- Pantalla Visual del GIF del Cuerpo Anatómico (CERO STICKMEN) -->
+      <div class="relative w-full h-56 bg-gradient-to-b from-[#18181b] via-[#101013] to-black flex items-center justify-center overflow-hidden p-2">
+        <img 
+          src="${currentMediaUrl}" 
+          alt="${asset.label}" 
+          class="max-h-full max-w-full object-contain filter drop-shadow-[0_0_18px_rgba(0,242,254,0.18)] transition-all duration-300 ${isPaused ? 'opacity-40 grayscale blur-[1px]' : 'opacity-100'}"
+          loading="lazy"
+        />
+
+        <!-- Controles Inferiores Flotantes: Selector de Vista y Plano -->
+        <div class="absolute bottom-2 left-2 right-2 z-10 flex items-center justify-between pointer-events-none">
+          <span class="pointer-events-auto px-2 py-0.5 rounded bg-black/85 backdrop-blur-md border border-[#333] text-[9px] font-mono text-cyan-300 font-bold">
+            ${asset.plane}
+          </span>
+          <div class="pointer-events-auto flex items-center gap-1 bg-black/80 backdrop-blur-md p-0.5 rounded-lg border border-[#333]">
+            <button 
+              onclick="event.stopPropagation(); setPlayerMode('${movement.id}', 'movement')"
+              class="px-2 py-0.5 rounded text-[9px] font-mono font-bold transition-all ${playerMode === 'movement' ? 'bg-cyan-500 text-black shadow-sm' : 'text-neutral-400 hover:text-white'}">
+              Movimiento
+            </button>
+            <button 
+              onclick="event.stopPropagation(); setPlayerMode('${movement.id}', 'anatomy')"
+              class="px-2 py-0.5 rounded text-[9px] font-mono font-bold transition-all ${playerMode === 'anatomy' ? 'bg-cyan-500 text-black shadow-sm' : 'text-neutral-400 hover:text-white'}">
+              Anatomía 3D
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- Pie del Reproductor con Músculos Activos Resaltados -->
       <div class="px-3 py-1.5 bg-[#141416] border-t border-[#222] flex items-center justify-between text-[10px] font-mono">
