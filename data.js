@@ -273,10 +273,11 @@ const ANATOMY_DATABASE = {
       dailyAction: "Aplicación de fuerza horizontal hacia adelante mediante la extensión coordinada de codos y brazos con postura en zancada para vencer la inercia de una puerta maciza.",
       joint: "Glenohumeral, Escapulotorácica, Húmero-cubital, Radiocarpiana y Articulaciones de Miembros Inferiores en zancada",
       jointType: "Enartrosis (Hombro), Gínglimo (Codo) y Condílea (Muñeca)",
-      plane: "Sagital y Transversal (Aducción horizontal)",
-      axis: "Eje Longitudinal vertical de aducción y laterolateral de flexión/extensión",
+      plane: "Plano Transversal (Eje Vertical)",
+      planeBadge: "Transversal (Eje Vertical)",
+      axis: "Eje Vertical (Longitudinal) para aducción horizontal de hombro y extensión de codo",
       rom: "Aducción horizontal: 0°-90° | Extensión de codo: 90° a 0° | Bloqueo muñeca: 30°",
-      description: "Transmisión de fuerza en cadena cinética desde el suelo: los pies empujan contra el suelo, el core transfiere el vector y los miembros superiores lo aplican a la puerta.",
+      description: "Transmisión de fuerza en cadena cinética desde el suelo: los pies empujan contra el suelo, el core transfiere el vector y los miembros superiores realizan aducción horizontal (plano transversal, eje vertical) y extensión de codo contra la puerta.",
       lever: "3er Género en hombro; 1er Género en codo",
       animationType: "daily-door-push",
       highlightedMuscle: "Pectoral Mayor, Tríceps Braquial y Core Torsional (Fijador)",
@@ -644,6 +645,19 @@ const ANATOMY_DATABASE = {
           innervation: "Nervio Mediano (C6, C7).",
           action: "Pronación del antebrazo y asiste en la flexión del codo cuando existe resistencia añadida.",
           clinicalNote: "El nervio mediano discurre entre sus dos cabezas; su hipertonía genera el Síndrome del Pronador Redondo."
+        },
+        {
+          id: "deltoides-manguito-flex-codo",
+          name: "Deltoides y Manguito Rotador (Fijadores Glenohumerales)",
+          scientificName: "Musculi deltoideus et rotatores humeri",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Cintura Escapular y Hombro",
+          origin: "Clavícula, acromion y fosas escapulares (supra/infraespinosa).",
+          insertion: "Tuberosidad deltoidea y tubérculos mayor/menor del húmero.",
+          innervation: "Nervios Axilar y Supraescapular (C5, C6).",
+          action: "Anclan y fijan el húmero en posición neutra impidiendo que el codo se desplace hacia adelante o atrás durante la flexión.",
+          clinicalNote: "Sin fijación del hombro, la flexión del codo produce una oscilación compensatoria que reduce la fuerza efectiva del bíceps."
         }
       ]
     },
@@ -670,6 +684,7 @@ const ANATOMY_DATABASE = {
       searchTerms: ["extension de codo", "estirar brazo", "triceps", "anconeo", "codo posterior"],
       primaryMuscle: "Tríceps braquial",
       synergistMuscles: ["Ancóneo"],
+      stabilizers: "Deltoides posterior, Pectoral mayor clavicular y Manguito rotador (fijan el hombro contra la inercia)",
       antagonist: "Braquial anterior y Bíceps braquial",
       muscles: [
         {
@@ -689,14 +704,27 @@ const ANATOMY_DATABASE = {
           id: "anconeo",
           name: "Ancóneo",
           scientificName: "Musculus anconeus",
-          role: "Motor Secundario y Estabilizador Articular",
-          roleType: "secondary",
+          role: "Sinergista y Estabilizador Articular",
+          roleType: "synergist",
           compartment: "Región Posterior del Codo (Triángulo Olecraniano)",
           origin: "Superficie posterior e inferior del epicóndilo lateral del húmero.",
           insertion: "Cara lateral del olécranon y cuarto superior posterolateral de la diáfisis cubital.",
           innervation: "Nervio Radial (C7, C8, T1), por una rama de la cabeza medial del tríceps.",
           action: "Coadyuva en la fase terminal de la extensión del codo; estabiliza la articulación húmero-cubital y retrae la cápsula posterior evitando su pellizcamiento.",
           clinicalNote: "Abduce sutilmente el cúbito durante la pronación activa del antebrazo."
+        },
+        {
+          id: "deltoides-posterior-fijador-ext",
+          name: "Deltoides Posterior y Pectoral Clavicular (Fijadores del Húmero)",
+          scientificName: "Musculi deltoideus posterior et pectoralis major",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Hombro Posterior y Anterior",
+          origin: "Espina de la escápula y tercio medial de la clavícula.",
+          insertion: "Tuberosidad deltoidea y cresta del tubérculo mayor del húmero.",
+          innervation: "Nervios Axilar y Pectoral Lateral (C5, C6, C7).",
+          action: "Coactivan y fijan el muñón del hombro absorbiendo el vector inercial del antebrazo durante la extensión rápida.",
+          clinicalNote: "Garantizan que la potencia extensora se focalice en la articulación húmero-cubital sin desplazamientos parásitos del brazo."
         }
       ]
     },
@@ -789,6 +817,19 @@ const ANATOMY_DATABASE = {
           innervation: "Nervio Torácico Largo / Respiratorio de Charles Bell (C5, C6, C7).",
           action: "Produce la báscula axilar o campaneo externo de la escápula para permitir la abducción por encima de los 90°.",
           clinicalNote: "Su lesión causa 'escápula alada' e imposibilidad total de elevar el brazo sobre la cabeza."
+        },
+        {
+          id: "manguito-coaptador-abd",
+          name: "Manguito de los Rotadores (Infraespinoso, Redondo Menor, Subescapular)",
+          scientificName: "Musculi rotatores humeri",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Manguito Rotador Periarticular",
+          origin: "Fosa infraespinosa, fosa subescapular y borde axilar de la escápula.",
+          insertion: "Tubérculos mayor y menor del húmero y cápsula articular.",
+          innervation: "Nervios Supraescapular, Subescapular y Axilar (C5, C6).",
+          action: "Ejercen una fuerza de depresión y centrado concéntrico de la cabeza humeral dentro de la cavidad glenoidea, evitando el choque contra el acromion.",
+          clinicalNote: "Si este trío de fijadores falla, el deltoides proyecta la cabeza del húmero hacia el acromion provocando tendinopatía por pinzamiento."
         }
       ]
     },
@@ -815,6 +856,7 @@ const ANATOMY_DATABASE = {
       searchTerms: ["flexion de hombro", "levantar brazo", "subir brazo", "anteversion", "deltoides anterior", "coracobraquial"],
       primaryMuscle: "Deltoides (Porción Clavicular / Anterior)",
       synergistMuscles: ["Coracobraquial", "Pectoral mayor (haz clavicular)", "Bíceps braquial (cabeza corta)"],
+      stabilizers: "Serrato anterior, Trapecio inferior y Manguito rotador (fijan la escápula contra la parrilla costal)",
       antagonist: "Dorsal ancho, Redondo mayor y Deltoides espinal",
       muscles: [
         {
@@ -868,6 +910,19 @@ const ANATOMY_DATABASE = {
           innervation: "Nervio Musculocutáneo (C5, C6).",
           action: "Asiste en la flexión del hombro cuando el codo está estabilizado.",
           clinicalNote: "Su anclaje en la coracoides le permite cruzar la articulación glenohumeral por delante."
+        },
+        {
+          id: "serrato-trapecio-fijador-flex",
+          name: "Serrato Anterior y Trapecio Inferior (Fijadores Escapulotorácicos)",
+          scientificName: "Musculi serratus anterior et trapezius inferior",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Pared Torácica Lateral y Espalda Media",
+          origin: "Caras laterales de costillas 1ª a 9ª y apófisis espinosas T4 a T12.",
+          insertion: "Borde medial y espina de la escápula.",
+          innervation: "Nervio Torácico Largo (C5-C7) y Nervio Accesorio (XI).",
+          action: "Adosan la escápula contra el tórax ofreciendo una base de soporte rígida para que el brazo pueda proyectarse hacia el frente.",
+          clinicalNote: "La debilidad de estos fijadores escapulares produce escápula alada al empujar o elevar objetos frontales."
         }
       ]
     },
@@ -960,6 +1015,19 @@ const ANATOMY_DATABASE = {
           innervation: "Nervio Glúteo Superior (L4, L5, S1).",
           action: "Bloquea y estabiliza la rodilla en los últimos grados de extensión completa.",
           clinicalNote: "Su tensión excesiva desalinea el tracking patelar hacia lateral."
+        },
+        {
+          id: "isquiotibiales-fijador-ext-rodilla",
+          name: "Isquiotibiales (Coaptadores Protectores del LCA)",
+          scientificName: "Musculi ischiocrurales",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Muslo Posterior",
+          origin: "Tuberosidad isquiática y línea áspera femoral.",
+          insertion: "Cabeza del peroné y cóndilos tibiales.",
+          innervation: "Nervio Ciático (L5, S1, S2).",
+          action: "Co-contracción posterior sincrónica que frena el cizallamiento anterior de la tibia, protegiendo activamente el Ligamento Cruzado Anterior (LCA).",
+          clinicalNote: "La activación refleja de los isquiotibiales es el principal mecanismo de protección activa de la rodilla en cadena abierta."
         }
       ]
     },
@@ -986,6 +1054,7 @@ const ANATOMY_DATABASE = {
       searchTerms: ["flexion de rodilla", "doblar pierna", "talon al gluteo", "isquiotibiales", "biceps femoral", "semitendinoso", "semimembranoso", "popliteo"],
       primaryMuscle: "Isquiotibiales (Bíceps femoral, Semitendinoso, Semimembranoso)",
       synergistMuscles: ["Gastrocnemios (gemelos)", "Poplíteo", "Grácil (recto interno)", "Sartorio"],
+      stabilizers: "Cuádriceps femoral (control excéntrico del movimiento y centrado rotuliano) y Pelvitrocantéreos",
       antagonist: "Cuádriceps femoral",
       muscles: [
         {
@@ -1078,6 +1147,19 @@ const ANATOMY_DATABASE = {
           innervation: "Nervio Femoral (L2, L3).",
           action: "Flexiona y rota medialmente la rodilla.",
           clinicalNote: "Cruza en diagonal todo el muslo anterior."
+        },
+        {
+          id: "cuadriceps-fijador-patelar",
+          name: "Cuádriceps Femoral (Fijador Excéntrico y Centrador Rotuliano)",
+          scientificName: "Musculus quadriceps femoris",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Muslo Anterior",
+          origin: "Espina ilíaca anteroinferior y diáfisis femoral.",
+          insertion: "Tuberosidad anterior de la tibia por el tendón rotuliano.",
+          innervation: "Nervio Femoral (L2, L3, L4).",
+          action: "Centra la rótula en la tróclea femoral y actúa como fijador desacelerador excéntrico regulando la velocidad de la flexión.",
+          clinicalNote: "Impide el colapso de la rodilla y neutraliza las fuerzas rotacionales sobre los meniscos."
         }
       ]
     },
@@ -1196,6 +1278,19 @@ const ANATOMY_DATABASE = {
           innervation: "Nervio Obturador (división anterior L2, L3, L4).",
           action: "Aducción y asiste en los primeros 50° de flexión de cadera.",
           clinicalNote: "Su tendón proximal es comúnmente afectado en pubalgias de futbolistas."
+        },
+        {
+          id: "transverso-recto-fijador-pelvis",
+          name: "Transverso y Recto Abdominal (Fijadores Lumbopélvicos Antilordosis)",
+          scientificName: "Musculi transversus abdominis et rectus abdominis",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Pared Abdominal Anterior y Profunda",
+          origin: "Cresta ilíaca, sínfisis del pubis y cartílagos costales 5º a 7º.",
+          insertion: "Línea alba y cresta del pubis.",
+          innervation: "Nervios Intercostales inferiores (T7-T12) y L1.",
+          action: "Fijan la pelvis en retroversión activa impidiendo que la tracción del psoas mayor hiperlordose la columna lumbar.",
+          clinicalNote: "Sin fijadores abdominales activos, la flexión de cadera arquearía destructivamente la columna lumbar causando lumbalgia mecánica."
         }
       ]
     },
@@ -1222,6 +1317,7 @@ const ANATOMY_DATABASE = {
       searchTerms: ["abduccion de cadera", "separar pierna", "gluteo medio", "gluteo menor", "trendelenburg", "cadera", "tfl"],
       primaryMuscle: "Glúteo medio",
       synergistMuscles: ["Glúteo menor", "Tensor de la fascia lata", "Piriforme (en flexión)"],
+      stabilizers: "Glúteo medio contralateral y Cuadrado lumbar (mantienen la horizontalidad pélvica impidiendo el signo de Trendelenburg)",
       antagonist: "Aductores (Mayor, Largo, Corto), Pectíneo y Grácil",
       muscles: [
         {
@@ -1275,6 +1371,19 @@ const ANATOMY_DATABASE = {
           innervation: "Ramos directos del Plexo Sacro (S1, S2).",
           action: "Abductor de la cadera cuando esta se encuentra flexionada a 90° (rotador externo en extensión).",
           clinicalNote: "El nervio ciático sale por debajo de él; su espasmo provoca el Síndrome Piriforme o falsa ciática."
+        },
+        {
+          id: "gluteo-medio-contralateral-fijador",
+          name: "Glúteo Medio Contralateral y Cuadrado Lumbar (Pilar Pélvico Antivalgo)",
+          scientificName: "Musculi gluteus medius contralateralis et quadratus lumborum",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Pelvis Contralateral y Pared Abdominal Posterior",
+          origin: "Línea glútea anterior del ilion opuesto y cresta ilíaca dorsal.",
+          insertion: "Trocánter mayor contralateral y costilla 12ª.",
+          innervation: "Nervio Glúteo Superior (L4-S1) y ramos espinales de T12-L4.",
+          action: "Mantiene la pelvis horizontal en el plano frontal asegurando que la abducción contralateral ocurra sin inclinación compensatoria del tronco (Trendelenburg).",
+          clinicalNote: "Garantiza la estabilidad horizontal pélvica de la marcha en fisioterapia y biomecánica clínica."
         }
       ]
     },
@@ -1354,6 +1463,19 @@ const ANATOMY_DATABASE = {
           innervation: "Nervio Peroneo Profundo (L5, S1).",
           action: "Asiste en la dorsiflexión y produce eversión (pronación) del pie.",
           clinicalNote: "Inconstante en un 5-10% de la población, pero de gran relevancia en la estabilidad del tobillo."
+        },
+        {
+          id: "peroneos-fijadores-tobillo",
+          name: "Peroneos Lateral Largo y Corto (Estabilizadores de Mortaja y Arco)",
+          scientificName: "Musculi fibulares longus et brevis",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Compartimento Lateral de la Pierna",
+          origin: "Cabeza y cara lateral del peroné.",
+          insertion: "Base del 5º metatarsiano y 1ª cuña con base del 1er metatarsiano.",
+          innervation: "Nervio Peroneo Superficial (L5, S1).",
+          action: "Coactivan y fijan la mortaja tibioperonea impidiendo la inversión brusca del retropié durante la dorsiflexión activa.",
+          clinicalNote: "Protegen el ligamento talofibular anterior contra esguinces de tobillo al caminar o correr."
         }
       ]
     },
@@ -1380,6 +1502,7 @@ const ANATOMY_DATABASE = {
       searchTerms: ["flexion plantar", "puntas de pie", "gemelos", "soleo", "triceps sural", "tendon aquiles", "tobillo", "tibial posterior"],
       primaryMuscle: "Tríceps Sural (Gastrocnemios y Sóleo)",
       synergistMuscles: ["Plantar delgado", "Tibial posterior", "Flexor largo de los dedos", "Flexor largo del dedo gordo", "Peroneo largo y corto"],
+      stabilizers: "Tibial anterior e intrínsecos del pie (tensan la bóveda plantar y coactivan la estabilidad del retropié)",
       antagonist: "Tibial anterior y Extensor largo de los dedos",
       muscles: [
         {
@@ -1472,6 +1595,19 @@ const ANATOMY_DATABASE = {
           innervation: "Nervio Peroneo Superficial (L5, S1).",
           action: "Eversión del pie y asiste en la flexión plantar.",
           clinicalNote: "Cruza oblicuamente toda la planta del pie asegurando el arco transversal."
+        },
+        {
+          id: "tibial-anterior-fijador-plantar",
+          name: "Tibial Anterior e Intrínsecos del Pie (Fijadores de la Bóveda Plantar)",
+          scientificName: "Musculus tibialis anterior et musculi plantares",
+          role: "Fijador / Estabilizador de Cadena",
+          roleType: "stabilizer",
+          compartment: "Pierna Anterior y Planta del Pie",
+          origin: "Cóndilo lateral de la tibia y aponeurosis plantar.",
+          insertion: "1ª cuña y falanges de los dedos.",
+          innervation: "Nervio Peroneo Profundo y Nervio Tibial (L4-S2).",
+          action: "Fijan el retropié y tensan la bóveda longitudinal del pie para convertirlo en una palanca rígida sobre la que el tríceps sural propulsa.",
+          clinicalNote: "Sin estos fijadores, el antepié se colapsaría absorbiendo la energía del despegue en lugar de propulsar el cuerpo."
         }
       ]
     }
