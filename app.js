@@ -234,8 +234,8 @@ const ANATOMICAL_GIF_DATABASE = {
   },
   // 7. Flexión de Cadera
   "hip-flexion": {
-    movementGif: "./stitch_reference/flexion%20cadera.mp4",
-    anatomyGif: "./stitch_reference/flexion%20cadera.mp4",
+    movementGif: "./stitch_reference/flexion%20cadera.gif",
+    anatomyGif: "./stitch_reference/flexion%20cadera.gif",
     label: "Flexión de Cadera (Elevación anterior del fémur por psoas ilíaco)",
     plane: "Plano Sagital"
   },
