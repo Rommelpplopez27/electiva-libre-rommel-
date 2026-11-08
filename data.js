@@ -54,6 +54,7 @@ const ANATOMY_DATABASE = {
       description: "Patrón motor fundamental de triple flexión en fase de descenso excéntrico y triple extensión en fase de elevación concéntrica. Exige neutralidad lumbar estricta.",
       lever: "3er Género en rodilla y cadera; 1er Género en raquis (músculos erectores contrapesando el peso anterior)",
       animationType: "daily-squat",
+      image: "./stitch_reference/agacharse-recoger-objeto.gif",
       highlightedMuscle: "Glúteo Mayor, Cuádriceps y Erectores Espinales (Fijadores)",
       searchTerms: ["agacharse", "coger objeto", "sentadilla", "squat", "levantar carga", "vida diaria", "avd", "suelo", "core"],
       primaryMuscle: "Glúteo mayor y Cuádriceps femoral",
