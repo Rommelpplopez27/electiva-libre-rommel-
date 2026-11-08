@@ -213,50 +213,50 @@ const ANATOMICAL_GIF_DATABASE = {
   },
   // 4. Flexión de Hombro
   "shoulder-flexion": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
+    movementGif: "./stitch_reference/flexion%20hombro%20.gif",
+    anatomyGif: "./stitch_reference/flexion%20hombro%20.gif",
     label: "Flexión de Hombro (Anteversión anterior del brazo)",
     plane: "Plano Sagital"
   },
   // 5. Extensión de Rodilla
   "knee-extension": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Quadricep-animation.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Quadricep-animation.gif",
+    movementGif: "./stitch_reference/extension%20rodilla.gif",
+    anatomyGif: "./stitch_reference/extension%20rodilla.gif",
     label: "Extensión de Rodilla (Alineación de pierna por cuádriceps de 90° a 0°)",
     plane: "Plano Sagital"
   },
   // 6. Flexión de Rodilla
   "knee-flexion": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Biceps_femoris_muscle_-_animation_1.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/c/c8/Biceps_femoris_muscle_-_animation_1.gif",
+    movementGif: "./stitch_reference/flexion%20rodilla.gif",
+    anatomyGif: "./stitch_reference/flexion%20rodilla.gif",
     label: "Flexión de Rodilla (Isquiotibiales y bíceps femoral de 0° a 130°)",
     plane: "Plano Sagital"
   },
   // 7. Flexión de Cadera
   "hip-flexion": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/1/1d/Iliacus_muscle_-_animation_1.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/1/1d/Iliacus_muscle_-_animation_1.gif",
+    movementGif: "./stitch_reference/flexion-cadera.gif",
+    anatomyGif: "./stitch_reference/flexion-cadera.gif",
     label: "Flexión de Cadera (Elevación anterior del fémur por psoas ilíaco)",
     plane: "Plano Sagital"
   },
   // 8. Abducción de Cadera
   "hip-abduction": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Gluteus_medius_muscle_-_animation01.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Gluteus_medius_muscle_-_animation01.gif",
+    movementGif: "./stitch_reference/abduccion-cadera.gif",
+    anatomyGif: "./stitch_reference/abduccion-cadera.gif",
     label: "Abducción de Cadera (Separación lateral de la extremidad por glúteo medio)",
     plane: "Plano Frontal"
   },
   // 9. Dorsiflexión de Tobillo
   "ankle-dorsiflexion": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Tibialis_anterior_muscle_-_animation.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Tibialis_anterior_muscle_-_animation.gif",
+    movementGif: "./stitch_reference/dorsi.gif",
+    anatomyGif: "./stitch_reference/dorsi.gif",
     label: "Dorsiflexión de Tobillo (Elevación del dorso del pie por tibial anterior)",
     plane: "Plano Sagital"
   },
   // 10. Flexión Plantar de Tobillo
   "ankle-plantarflexion": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/1/11/Standing-calf-raises-1.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/f/f2/Gastrocnemius_muscle_-_animation.gif",
+    movementGif: "./stitch_reference/flexion%20plantar.gif",
+    anatomyGif: "./stitch_reference/flexion%20plantar.gif",
     label: "Flexión Plantar de Tobillo (Elevación sobre puntas por tríceps sural)",
     plane: "Plano Sagital"
   },
