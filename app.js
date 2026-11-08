@@ -192,8 +192,8 @@ const activePlayerMode = {};
 const ANATOMICAL_GIF_DATABASE = {
   // 1. Flexión de Codo
   "elbow-flexion": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Standing-biceps-curl-1.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Biceps_brachii_muscle_-_animation01.gif",
+    movementGif: "./stitch_reference/flexion-codo.gif",
+    anatomyGif: "./stitch_reference/flexion-codo.gif",
     label: "Flexión de Codo (Aproximación de antebrazo hacia el brazo)",
     plane: "Plano Sagital"
   },
