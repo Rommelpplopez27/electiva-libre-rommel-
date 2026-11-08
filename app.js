@@ -280,8 +280,8 @@ const ANATOMICAL_GIF_DATABASE = {
     plane: "Plano Sagital"
   },
   "daily-stairs-climb": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/a/a4/One-leg-squat-1.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Quadricep-animation.gif",
+    movementGif: "./stitch_reference/Subir%20escaleras.gif",
+    anatomyGif: "./stitch_reference/Subir%20escaleras.gif",
     label: "Subir escaleras (Ascenso en carga monopodal)",
     plane: "Plano Sagital"
   },
