@@ -199,8 +199,8 @@ const ANATOMICAL_GIF_DATABASE = {
   },
   // 2. Extensión de Codo (Corregida: extensión concéntrica de tríceps de flexión a neutro)
   "elbow-extension": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Standing-triceps-extension-1.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Triceps_brachii_muscle_-_animation01.gif",
+    movementGif: "./stitch_reference/extension%20de%20codo%20.gif",
+    anatomyGif: "./stitch_reference/extension%20de%20codo%20.gif",
     label: "Extensión de Codo (Alineación recta de antebrazo y activación de tríceps)",
     plane: "Plano Sagital"
   },
