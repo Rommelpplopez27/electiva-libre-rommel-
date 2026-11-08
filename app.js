@@ -274,8 +274,8 @@ const ANATOMICAL_GIF_DATABASE = {
     plane: "Plano Sagital"
   },
   "daily-door-push": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Triceps_brachii_muscle_-_animation01.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Triceps_brachii_muscle_-_animation01.gif",
+    movementGif: "./stitch_reference/Empujar%20una%20puerta%20pesada%20(Patr%C3%B3n%20de%20Empuje%20Horizontal%20Push).gif",
+    anatomyGif: "./stitch_reference/Empujar%20una%20puerta%20pesada%20(Patr%C3%B3n%20de%20Empuje%20Horizontal%20Push).gif",
     label: "Empujar puerta pesada (Extensión coordinada y pectoral)",
     plane: "Plano Sagital"
   },
