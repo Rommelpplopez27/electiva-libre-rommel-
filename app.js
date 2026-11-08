@@ -363,7 +363,28 @@ function renderUnifiedMotionPlayer(movement) {
 
 function togglePauseMovement(movementId) {
   animationPausedState[movementId] = !animationPausedState[movementId];
-  renderMovementFeed();
+  
+  const isPaused = animationPausedState[movementId];
+  const imgElement = document.querySelector(`img[alt="${ANATOMY_DATABASE.movements.find(m => m.id === movementId)?.name}"]`) || document.querySelector("img");
+
+  if (imgElement) {
+    if (isPaused) {
+      const canvas = document.createElement("canvas");
+      canvas.width = imgElement.naturalWidth || imgElement.width;
+      canvas.height = imgElement.naturalHeight || imgElement.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+      
+      imgElement.dataset.originalSrc = imgElement.src;
+      imgElement.src = canvas.toDataURL("image/gif");
+    } else {
+      if (imgElement.dataset.originalSrc) {
+        imgElement.src = imgElement.dataset.originalSrc;
+      }
+    }
+  }
+
+ 
 }
 
 // -----------------------------------------------------------------------------
