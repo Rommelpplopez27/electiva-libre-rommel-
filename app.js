@@ -268,8 +268,8 @@ const ANATOMICAL_GIF_DATABASE = {
     plane: "Plano Sagital"
   },
   "daily-shelf-reach": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
+    movementGif: "./stitch_reference/Alcanzar%20un%20objeto%20en%20un%20estante%20alto%20.gif",
+    anatomyGif: "./stitch_reference/Alcanzar%20un%20objeto%20en%20un%20estante%20alto%20.gif",
     label: "Alcanzar estante alto (Ritmo escápulo-humeral y deltoides)",
     plane: "Plano Sagital"
   },
