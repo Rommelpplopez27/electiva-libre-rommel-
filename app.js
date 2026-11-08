@@ -206,8 +206,8 @@ const ANATOMICAL_GIF_DATABASE = {
   },
   // 3. Abducción de Hombro
   "shoulder-abduction": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Deltoid_muscle_animation.gif",
+    movementGif: "./stitch_reference/abduccion%20hombro%204.gif",
+    anatomyGif: "./stitch_reference/abduccion%20hombro%204.gif",
     label: "Abducción de Hombro (Separación del brazo de la línea media)",
     plane: "Plano Frontal"
   },
