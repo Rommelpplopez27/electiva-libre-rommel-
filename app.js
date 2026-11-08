@@ -318,11 +318,7 @@ function renderUnifiedMotionPlayer(movement) {
           <span class="w-1.5 h-1.5 rounded-full ${isPaused ? 'bg-amber-400' : 'bg-emerald-400 animate-pulse'}"></span>
           ${isPaused ? 'Pausado' : 'Cuerpo Anatómico en Movimiento'}
         </span>
-        <button 
-          onclick="event.stopPropagation(); togglePauseMovement('${movement.id}')"
-          class="pointer-events-auto p-1.5 rounded-full bg-black/80 hover:bg-[#262626] border border-[#333] text-neutral-300 hover:text-white transition-all shadow-md active:scale-95">
-          <span class="material-symbols-outlined text-[16px]">${isPaused ? 'play_arrow' : 'pause'}</span>
-        </button>
+       
       </div>
 
       <!-- Pantalla Visual del GIF del Cuerpo Anatómico (CERO STICKMEN) -->
