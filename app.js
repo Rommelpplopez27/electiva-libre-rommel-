@@ -308,7 +308,7 @@ function renderUnifiedMotionPlayer(movement) {
     plane: "Plano " + movement.plane
   };
 
-  const currentMediaUrl = (playerMode === "anatomy" && asset.anatomyGif) ? asset.anatomyGif : asset.movementGif;
+ const currentMediaUrl = asset.movementGif;
 
   return `
     <div class="relative w-full overflow-hidden rounded-xl border border-[#262626] shadow-inner bg-black ${isPaused ? 'animation-paused' : ''}">
@@ -345,11 +345,7 @@ function renderUnifiedMotionPlayer(movement) {
               class="px-2 py-0.5 rounded text-[9px] font-mono font-bold transition-all ${playerMode === 'movement' ? 'bg-cyan-500 text-black shadow-sm' : 'text-neutral-400 hover:text-white'}">
               Movimiento
             </button>
-            <button 
-              onclick="event.stopPropagation(); setPlayerMode('${movement.id}', 'anatomy')"
-              class="px-2 py-0.5 rounded text-[9px] font-mono font-bold transition-all ${playerMode === 'anatomy' ? 'bg-cyan-500 text-black shadow-sm' : 'text-neutral-400 hover:text-white'}">
-              Anatomía 3D
-            </button>
+         
           </div>
         </div>
       </div>
