@@ -286,8 +286,8 @@ const ANATOMICAL_GIF_DATABASE = {
     plane: "Plano Sagital"
   },
   "daily-trunk-rotation": {
-    movementGif: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Gluteus_medius_muscle_-_animation01.gif",
-    anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Gluteus_medius_muscle_-_animation01.gif",
+    movementGif: "./stitch_reference/rotaci%C3%B3n%20tronco.gif",
+    anatomyGif: "./stitch_reference/rotaci%C3%B3n%20tronco.gif",
     label: "Rotación de tronco al girarse (Torsión de raquis y oblicuos)",
     plane: "Plano Transversal"
   }
