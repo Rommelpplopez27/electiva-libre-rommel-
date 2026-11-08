@@ -192,8 +192,8 @@ const activePlayerMode = {};
 const ANATOMICAL_GIF_DATABASE = {
   // 1. Flexión de Codo
   "elbow-flexion": {
-    movementGif: "./stitch_reference/flexion-codo.gif",
-    anatomyGif: "./stitch_reference/flexion-codo.gif",
+    movementGif: "./stitch_reference/flexion%20de%20codo%20.gif",
+    anatomyGif: "./stitch_reference/flexion%20de%20codo%20.gif",
     label: "Flexión de Codo (Aproximación de antebrazo hacia el brazo)",
     plane: "Plano Sagital"
   },
