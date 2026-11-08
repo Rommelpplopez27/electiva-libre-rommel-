@@ -234,15 +234,15 @@ const ANATOMICAL_GIF_DATABASE = {
   },
   // 7. Flexión de Cadera
   "hip-flexion": {
-    movementGif: "./stitch_reference/flexion-cadera.gif",
-    anatomyGif: "./stitch_reference/flexion-cadera.gif",
+    movementGif: "./stitch_reference/flexion%20cadera.gif",
+    anatomyGif: "./stitch_reference/flexion%20cadera.gif",
     label: "Flexión de Cadera (Elevación anterior del fémur por psoas ilíaco)",
     plane: "Plano Sagital"
   },
   // 8. Abducción de Cadera
   "hip-abduction": {
-    movementGif: "./stitch_reference/abduccion-cadera.gif",
-    anatomyGif: "./stitch_reference/abduccion-cadera.gif",
+    movementGif: "./stitch_reference/abduccion%20cadera.gif",
+    anatomyGif: "./stitch_reference/abduccion%20cadera.gif",
     label: "Abducción de Cadera (Separación lateral de la extremidad por glúteo medio)",
     plane: "Plano Frontal"
   },
