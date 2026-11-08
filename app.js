@@ -262,7 +262,7 @@ const ANATOMICAL_GIF_DATABASE = {
   },
   // Actividades de la Vida Diaria (AVD)
   "daily-squat": {
-    movementGif: "./stitch_reference/squat.gif",
+    movementGif: "stitch_reference/squat.gif",
     anatomyGif: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Quadricep-animation.gif",
     label: "Agacharse / Sentadilla (Triple flexión funcional en cadena cerrada)",
     plane: "Plano Sagital"
